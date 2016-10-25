@@ -9,7 +9,6 @@ require 'net/http'
 require 'taglib'
 
 class TuneSort
-
   def initialize(directory)
     if File.exists?(File.expand_path(directory))
       @directory = File.expand_path(directory)
@@ -67,6 +66,11 @@ class TuneSort
     track_number
   end
 
+  def get_copyright(id)
+    lookup = "https://itunes.apple.com/us/album/id#{id}"
+    Net::HTTP.get(URI.parse(lookup)).split(/<copyright>(.*?)<\/copyright>/)[1]
+  end
+
   def set_track_id(id, song)
     system("mp4tags -I #{id.to_i} #{song}")
   end
@@ -76,5 +80,4 @@ class TuneSort
     File.delete(@directory + '/spotify_tags.json')
     File.delete(@directory + '/wiki_tags.json')
   end
-
 end
