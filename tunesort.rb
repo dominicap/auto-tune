@@ -75,6 +75,10 @@ class TuneSort
     system("mp4tags -I #{id.to_i} #{song}")
   end
 
+  def set_copyright(copyright, song)
+    system("mp4tags -C #{copyright.to_s} #{song}")
+  end
+
   def remove_tags
     File.delete(@directory + '/itunes_tags.json')
     File.delete(@directory + '/spotify_tags.json')
