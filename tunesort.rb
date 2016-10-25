@@ -68,7 +68,7 @@ class TuneSort
 
   def get_copyright(id)
     lookup = "https://itunes.apple.com/us/album/id#{id}"
-    Net::HTTP.get(URI.parse(lookup)).split(/<copyright>(.*?)<\/copyright>/)[1]
+    Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
   end
 
   def set_track_id(id, song)
