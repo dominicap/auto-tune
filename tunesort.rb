@@ -36,7 +36,6 @@ class TuneSort
   end
 
   def parse_track_id(track_number)
-    track_id = nil
     if not File.exists?(@directory + '/itunes_tags.json')
       raise RuntimeError.new('iTunes JSON file has not been downloaded')
     else
@@ -46,24 +45,21 @@ class TuneSort
         if track_number == itunes_track_number.to_i
           itunes_rating = tags_hash.dig('results', key, 'trackExplicitness')
           if itunes_rating == 'explicit'
-            track_id = tags_hash.dig('results', key, 'trackId')
+            return tags_hash.dig('results', key, 'trackId')
           elsif itunes_rating == 'notExplicit'
-            track_id = tags_hash.dig('results', key, 'trackId')
+            return tags_hash.dig('results', key, 'trackId')
           end
         end
       }
     end
-    track_id
   end
 
   def get_track_number(song)
-    track_number = nil
     TagLib::FileRef.open(song) do |tune|
       unless tune.nil?
-        track_number = tune.tag.track
+        return tune.tag.track
       end
     end
-    track_number
   end
 
   def get_copyright(id)
@@ -79,7 +75,7 @@ class TuneSort
     system("mp4tags -C #{copyright.to_s} #{song}")
   end
 
-  def remove_tags
+  def remove_tag_files
     File.delete(@directory + '/itunes_tags.json')
     File.delete(@directory + '/spotify_tags.json')
     File.delete(@directory + '/wiki_tags.json')
