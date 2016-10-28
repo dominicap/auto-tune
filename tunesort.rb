@@ -53,7 +53,7 @@ class TuneSort
         if track_number == itunes_track_number.to_i
           itunes_rating = tags_hash.dig('results', key, 'trackExplicitness')
           if itunes_rating == 'explicit'
-            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+            @info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
                                   tags_hash.dig('results', key, 'collectionId'),
                                   tags_hash.dig('results', key, 'trackId'),
                                   tags_hash.dig('results', key, 'artistName'),
@@ -69,10 +69,9 @@ class TuneSort
                                   tags_hash.dig('results', key, 'trackTimeMillis'),
                                   tags_hash.dig('results', key, 'country'),
                                   tags_hash.dig('results', key, 'currency'),
-                                  tags_hash.dig('results', key, 'primaryGenreName'))
-            return info
+                                  tags_hash.dig('results', key, 'primaryGenreName')) 
           elsif itunes_rating == 'notExplicit'
-            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+            @info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
                                   tags_hash.dig('results', key, 'collectionId'),
                                   tags_hash.dig('results', key, 'trackId'),
                                   tags_hash.dig('results', key, 'artistName'),
@@ -88,8 +87,7 @@ class TuneSort
                                   tags_hash.dig('results', key, 'trackTimeMillis'),
                                   tags_hash.dig('results', key, 'country'),
                                   tags_hash.dig('results', key, 'currency'),
-                                  tags_hash.dig('results', key, 'primaryGenreName'))
-            return info
+                                  tags_hash.dig('results', key, 'primaryGenreName')) 
           end
         end
       }
