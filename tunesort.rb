@@ -76,8 +76,8 @@ class TuneSort
   end
 
   def remove_tag_files
-    File.delete(@directory + '/itunes_tags.json')
-    File.delete(@directory + '/spotify_tags.json')
-    File.delete(@directory + '/wiki_tags.json')
+    File.delete(@directory + '/itunes_tags.json',
+                @directory + '/spotify_tags.json',
+                @directory + '/wiki_tags.json')
   end
 end
