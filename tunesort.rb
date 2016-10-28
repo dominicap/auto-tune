@@ -3,7 +3,7 @@
 # @date: October 22, 2016
 # @author: Dominic Philip
 # @version: 0.1
-
+  
 require 'json'
 require 'net/http'
 require 'taglib'
@@ -35,7 +35,7 @@ class TuneSort
     end
   end
 
-  def parse_track_id(track_number)
+  def parse_info(track_number)
     if not File.exists?(@directory + '/itunes_tags.json')
       raise RuntimeError.new('iTunes JSON file has not been downloaded')
     else
@@ -45,9 +45,43 @@ class TuneSort
         if track_number == itunes_track_number.to_i
           itunes_rating = tags_hash.dig('results', key, 'trackExplicitness')
           if itunes_rating == 'explicit'
-            return tags_hash.dig('results', key, 'trackId')
+            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+                                  tags_hash.dig('results', key, 'collectionId'),
+                                  tags_hash.dig('results', key, 'trackId'),
+                                  tags_hash.dig('results', key, 'artistName'),
+                                  tags_hash.dig('results', key, 'collectionName'),
+                                  tags_hash.dig('results', key, 'trackName'),
+                                  tags_hash.dig('results', key, 'releaseDate'),
+                                  tags_hash.dig('results', key, 'collectionExplicitness'),
+                                  tags_hash.dig('results', key, 'trackExplicitness'),
+                                  tags_hash.dig('results', key, 'discCount'),
+                                  tags_hash.dig('results', key, 'discNumber'),
+                                  tags_hash.dig('results', key, 'trackCount'),
+                                  tags_hash.dig('results', key, 'trackNumber'),
+                                  tags_hash.dig('results', key, 'trackTimeMillis'),
+                                  tags_hash.dig('results', key, 'country'),
+                                  tags_hash.dig('results', key, 'currency'),
+                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            return info
           elsif itunes_rating == 'notExplicit'
-            return tags_hash.dig('results', key, 'trackId')
+            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+                                  tags_hash.dig('results', key, 'collectionId'),
+                                  tags_hash.dig('results', key, 'trackId'),
+                                  tags_hash.dig('results', key, 'artistName'),
+                                  tags_hash.dig('results', key, 'collectionName'),
+                                  tags_hash.dig('results', key, 'trackName'),
+                                  tags_hash.dig('results', key, 'releaseDate'),
+                                  tags_hash.dig('results', key, 'collectionExplicitness'),
+                                  tags_hash.dig('results', key, 'trackExplicitness'),
+                                  tags_hash.dig('results', key, 'discCount'),
+                                  tags_hash.dig('results', key, 'discNumber'),
+                                  tags_hash.dig('results', key, 'trackCount'),
+                                  tags_hash.dig('results', key, 'trackNumber'),
+                                  tags_hash.dig('results', key, 'trackTimeMillis'),
+                                  tags_hash.dig('results', key, 'country'),
+                                  tags_hash.dig('results', key, 'currency'),
+                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            return info
           end
         end
       }
