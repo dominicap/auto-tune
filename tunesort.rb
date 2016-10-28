@@ -28,6 +28,14 @@ class TuneSort
     end
   end
 
+  def get_spotify_tags(song, artist)
+    spotify_song_id_url = lookup = "https://api.spotify.com/v1/search?q=\
+                            album:#{album.downcase.gsub!(' ', '+')}%20\
+                            artist:#{artist.downcase.gsub!(' ', '+')}&type=track"
+    lookup = "https://api.spotify.com/v1/audio-features/#{id}"
+    File.write(@directory + '/spotify_tags.json', Net::HTTP.get(URI.parse(lookup)))
+  end
+
   def get_itunes_tags(query)
     unless File.exists?(@directory + '/itunes_tags.json')
       lookup = 'https://itunes.apple.com/search?term=' + query.downcase.gsub!(' ', '+')
@@ -96,17 +104,37 @@ class TuneSort
     end
   end
 
+  def get_album_title(song)
+    TagLib::FileRef.open(song) do |tune|
+      unless tune.nil?
+        return tune.tag.album
+      end
+    end
+  end
+
+  def get_artist_name(song)
+    TagLib::FileRef.open(song) do |tune|
+      unless tune.nil?
+        return tune.tag.album
+      end
+    end
+  end
+
   def get_copyright(id)
     lookup = "https://itunes.apple.com/us/album/id#{id}"
     Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
   end
 
-  def set_track_id(id, song)
-    system("mp4tags -I #{id.to_i} #{song}")
+  def set_track_id(track_id, song)
+    system("mp4tags -contentid #{id.to_i} #{song}")
+  end
+  
+  def set_artist_id(artist_id, song)
+    system("mp4tags -artistid #{artist_id.to_i} #{song}")
   end
 
   def set_copyright(copyright, song)
-    system("mp4tags -C #{copyright.to_s} #{song}")
+    system("mp4tags -copyright #{copyright.to_s} #{song}")
   end
 
   def remove_tag_files
