@@ -30,8 +30,8 @@ class TuneSort
 
   def get_spotify_tags(song, artist)
     spotify_song_id_url = lookup = "https://api.spotify.com/v1/search?q=\
-                            album:#{album.downcase.gsub!(' ', '+')}%20\
-                            artist:#{artist.downcase.gsub!(' ', '+')}&type=track"
+                                    album:#{album.downcase.gsub!(' ', '+')}%20\
+                                    artist:#{artist.downcase.gsub!(' ', '+')}&type=track"
     lookup = "https://api.spotify.com/v1/audio-features/#{id}"
     File.write(@directory + '/spotify_tags.json', Net::HTTP.get(URI.parse(lookup)))
   end
@@ -115,7 +115,7 @@ class TuneSort
   def get_artist_name(song)
     TagLib::FileRef.open(song) do |tune|
       unless tune.nil?
-        return tune.tag.album
+        return tune.tag.artist
       end
     end
   end
