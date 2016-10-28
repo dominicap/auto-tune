@@ -20,9 +20,9 @@ class TuneSort
   def os
     case RUBY_PLATFORM
       when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-        @os = 'windows'
+        return 'windows'
       when /darwin|mac os/
-        @os = 'macos'
+        return 'macos'
       else
         raise SystemCallError.new('Operating System is not supported', 1)
     end
