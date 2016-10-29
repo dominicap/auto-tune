@@ -7,8 +7,13 @@
 require 'json'
 require 'net/http'
 require 'taglib'
+require 'rspotify'
 
 class TuneSort
+
+  CLIENT_ID = 'e38aca60500943758be6be6e624b2e35'
+  CLIENT_SECRET = '68c60cc5600c48e0ab6f28f5a5e24040'
+
   def initialize(directory)
     if File.exists?(File.expand_path(directory))
       @directory = File.expand_path(directory)
@@ -28,17 +33,9 @@ class TuneSort
     end
   end
 
-  def get_spotify_tags(song, artist)
-    spotify_song_id_url = lookup = "https://api.spotify.com/v1/search?q=\
-                                    album:#{album.downcase.gsub!(' ', '+')}%20\
-                                    artist:#{artist.downcase.gsub!(' ', '+')}&type=track"
-    lookup = "https://api.spotify.com/v1/audio-features/#{id}"
-    File.write(@directory + '/spotify_tags.json', Net::HTTP.get(URI.parse(lookup)))
-  end
-
-  def get_itunes_tags(query)
+  def get_tags(artist, album)
     unless File.exists?(@directory + '/itunes_tags.json')
-      lookup = 'https://itunes.apple.com/search?term=' + query.downcase.gsub!(' ', '+')
+      lookup = 'https://itunes.apple.com/search?term=' + (artist + ' ' + album).downcase.gsub!(' ', '+')
       File.write(@directory + '/itunes_tags.json', Net::HTTP.get(URI.parse(lookup)))
     end
   end
@@ -53,41 +50,43 @@ class TuneSort
         if track_number == itunes_track_number.to_i
           itunes_rating = tags_hash.dig('results', key, 'trackExplicitness')
           if itunes_rating == 'explicit'
-            @info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
-                                   tags_hash.dig('results', key, 'collectionId'),
-                                   tags_hash.dig('results', key, 'trackId'),
-                                   tags_hash.dig('results', key, 'artistName'),
-                                   tags_hash.dig('results', key, 'collectionName'),
-                                   tags_hash.dig('results', key, 'trackName'),
-                                   tags_hash.dig('results', key, 'releaseDate'),
-                                   tags_hash.dig('results', key, 'collectionExplicitness'),
-                                   tags_hash.dig('results', key, 'trackExplicitness'),
-                                   tags_hash.dig('results', key, 'discCount'),
-                                   tags_hash.dig('results', key, 'discNumber'),
-                                   tags_hash.dig('results', key, 'trackCount'),
-                                   tags_hash.dig('results', key, 'trackNumber'),
-                                   tags_hash.dig('results', key, 'trackTimeMillis'),
-                                   tags_hash.dig('results', key, 'country'),
-                                   tags_hash.dig('results', key, 'currency'),
-                                   tags_hash.dig('results', key, 'primaryGenreName')) 
+            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+                                  tags_hash.dig('results', key, 'collectionId'),
+                                  tags_hash.dig('results', key, 'trackId'),
+                                  tags_hash.dig('results', key, 'artistName'),
+                                  tags_hash.dig('results', key, 'collectionName'),
+                                  tags_hash.dig('results', key, 'trackName'),
+                                  tags_hash.dig('results', key, 'releaseDate'),
+                                  tags_hash.dig('results', key, 'collectionExplicitness'),
+                                  tags_hash.dig('results', key, 'trackExplicitness'),
+                                  tags_hash.dig('results', key, 'discCount'),
+                                  tags_hash.dig('results', key, 'discNumber'),
+                                  tags_hash.dig('results', key, 'trackCount'),
+                                  tags_hash.dig('results', key, 'trackNumber'),
+                                  tags_hash.dig('results', key, 'trackTimeMillis'),
+                                  tags_hash.dig('results', key, 'country'),
+                                  tags_hash.dig('results', key, 'currency'),
+                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            return info
           elsif itunes_rating == 'notExplicit'
-            @info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
-                                   tags_hash.dig('results', key, 'collectionId'),
-                                   tags_hash.dig('results', key, 'trackId'),
-                                   tags_hash.dig('results', key, 'artistName'),
-                                   tags_hash.dig('results', key, 'collectionName'),
-                                   tags_hash.dig('results', key, 'trackName'),
-                                   tags_hash.dig('results', key, 'releaseDate'),
-                                   tags_hash.dig('results', key, 'collectionExplicitness'),
-                                   tags_hash.dig('results', key, 'trackExplicitness'),
-                                   tags_hash.dig('results', key, 'discCount'),
-                                   tags_hash.dig('results', key, 'discNumber'),
-                                   tags_hash.dig('results', key, 'trackCount'),
-                                   tags_hash.dig('results', key, 'trackNumber'),
-                                   tags_hash.dig('results', key, 'trackTimeMillis'),
-                                   tags_hash.dig('results', key, 'country'),
-                                   tags_hash.dig('results', key, 'currency'),
-                                   tags_hash.dig('results', key, 'primaryGenreName')) 
+            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
+                                  tags_hash.dig('results', key, 'collectionId'),
+                                  tags_hash.dig('results', key, 'trackId'),
+                                  tags_hash.dig('results', key, 'artistName'),
+                                  tags_hash.dig('results', key, 'collectionName'),
+                                  tags_hash.dig('results', key, 'trackName'),
+                                  tags_hash.dig('results', key, 'releaseDate'),
+                                  tags_hash.dig('results', key, 'collectionExplicitness'),
+                                  tags_hash.dig('results', key, 'trackExplicitness'),
+                                  tags_hash.dig('results', key, 'discCount'),
+                                  tags_hash.dig('results', key, 'discNumber'),
+                                  tags_hash.dig('results', key, 'trackCount'),
+                                  tags_hash.dig('results', key, 'trackNumber'),
+                                  tags_hash.dig('results', key, 'trackTimeMillis'),
+                                  tags_hash.dig('results', key, 'country'),
+                                  tags_hash.dig('results', key, 'currency'),
+                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            return info
           end
         end
       }
@@ -123,16 +122,30 @@ class TuneSort
     Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
   end
 
-  def set_track_id(track_id, song)
-    system("mp4tags -contentid #{id.to_i} #{song}")
+  def get_tempo(artist, track)
+    RSpotify.authenticate(CLIENT_ID, CLIENT_SECRET)
+    RSpotify::Track.search(artist + ' ' + track).max_by { |element|
+      element.audio_features.tempo.round }.audio_features.tempo.round
   end
-  
+
   def set_artist_id(artist_id, song)
     system("mp4tags -artistid #{artist_id.to_i} #{song}")
   end
 
+  def set_collection_id(set_collection_id, song)
+    system("mp4tags -playlistid #{set_collection_id.to_i} #{song}")
+  end
+
+  def set_track_id(track_id, song)
+    system("mp4tags -contentid #{track_id.to_i} #{song}")
+  end
+
   def set_copyright(copyright, song)
     system("mp4tags -copyright #{copyright.to_s} #{song}")
+  end
+
+  def set_tempo(tempo, song)
+    system("mp4tags -tempo #{tempo.to_i} #{song}")
   end
 
   def remove_tag_files
