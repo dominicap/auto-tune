@@ -131,23 +131,64 @@ class TuneSort
   end
 
   def set_artist_id(artist_id, song)
-    system("mp4tags -artistid #{artist_id.to_i} #{song}")
+    unless artist_id.nil?
+      system("mp4tags -artistid #{artist_id.to_i} #{song}")
+    end
   end
 
-  def set_collection_id(set_collection_id, song)
-    system("mp4tags -playlistid #{set_collection_id.to_i} #{song}")
+  def set_collection_id(collection_id, song)
+    unless collection_id.nil?
+      system("mp4tags -playlistid #{set_collection_id.to_i} #{song}")
+    end
   end
 
   def set_track_id(track_id, song)
-    system("mp4tags -contentid #{track_id.to_i} #{song}")
+    unless track_id.nil?
+      system("mp4tags -contentid #{track_id.to_i} #{song}")
+    end
+  end
+
+  def set_genre(genre, song)
+    genre_ids = { 'Blues' => 2, 
+                  'Comedy' => 3, 
+                  'Children\'s Music' => 4, 
+                  'Classical' => 5, 
+                  'Country' => 6, 
+                  'Electronic' => 7,
+                  'Holiday' => 8,
+                  'Opera' => 9,
+                  'Singer/Songwriter' => 10,
+                  'Jazz' => 11,
+                  'Latino' => 12,
+                  'New Age' => 13,
+                  'Pop' => 14,
+                  'R&B/Soul' => 15,
+                  'Soundtrack' => 16,
+                  'Dance' => 17,
+                  'Hip-Hop/Rap' => 18,
+                  'World' => 19,
+                  'Alternative' => 20,
+                  'Rock' => 21,
+                  'Christian & Gospel' => 22,
+                  'Vocal' => 23,
+                  'Reggae' => 24,
+                  'Easy Listening' => 25 }
+    unless genre.nil? or genre_ids[genre].nil?
+      system("mp4tags -genre #{genre.to_s} #{song}")
+      system("mp4tags -genreid #{genre_ids[genre].to_i} #{song}")
+    end
   end
 
   def set_copyright(copyright, song)
-    system("mp4tags -copyright #{copyright.to_s} #{song}")
+    unless copyright.nil?
+      system("mp4tags -copyright #{copyright.to_s} #{song}")
+    end
   end
 
   def set_tempo(tempo, song)
-    system("mp4tags -tempo #{tempo.to_i} #{song}")
+    unless tempo.nil?
+      system("mp4tags -tempo #{tempo.to_i} #{song}")
+    end
   end
 
   def remove_tag_files
