@@ -14,6 +14,13 @@ class TuneSort
   CLIENT_ID = 'e38aca60500943758be6be6e624b2e35'
   CLIENT_SECRET = '68c60cc5600c48e0ab6f28f5a5e24040'
 
+  ITUNES_TAG_KEYS = Array.new.push('artistId', 'collectionId', 'trackId', 'artistName',
+                                   'collectionName', 'trackName', 'releaseDate',
+                                   'collectionExplicitness', 'trackExplicitness',
+                                   'discCount', 'discNumber', 'trackCount',
+                                   'trackNumber', 'trackTimeMillis',
+                                   'country', 'currency', 'primaryGenreName')
+
   def initialize(directory)
     if File.exists?(File.expand_path(directory))
       @directory = File.expand_path(directory)
@@ -50,42 +57,16 @@ class TuneSort
         if track_number == itunes_track_number.to_i
           itunes_rating = tags_hash.dig('results', key, 'trackExplicitness')
           if itunes_rating == 'explicit'
-            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
-                                  tags_hash.dig('results', key, 'collectionId'),
-                                  tags_hash.dig('results', key, 'trackId'),
-                                  tags_hash.dig('results', key, 'artistName'),
-                                  tags_hash.dig('results', key, 'collectionName'),
-                                  tags_hash.dig('results', key, 'trackName'),
-                                  tags_hash.dig('results', key, 'releaseDate'),
-                                  tags_hash.dig('results', key, 'collectionExplicitness'),
-                                  tags_hash.dig('results', key, 'trackExplicitness'),
-                                  tags_hash.dig('results', key, 'discCount'),
-                                  tags_hash.dig('results', key, 'discNumber'),
-                                  tags_hash.dig('results', key, 'trackCount'),
-                                  tags_hash.dig('results', key, 'trackNumber'),
-                                  tags_hash.dig('results', key, 'trackTimeMillis'),
-                                  tags_hash.dig('results', key, 'country'),
-                                  tags_hash.dig('results', key, 'currency'),
-                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            info = Array.new
+            (0..ITUNES_TAG_KEYS.length).each { |index|
+              info.push(tags_hash.dig('results', key, ITUNES_TAG_KEYS[index]))
+            }
             return info
           elsif itunes_rating == 'notExplicit'
-            info = Array.new.push(tags_hash.dig('results', key, 'artistId'),
-                                  tags_hash.dig('results', key, 'collectionId'),
-                                  tags_hash.dig('results', key, 'trackId'),
-                                  tags_hash.dig('results', key, 'artistName'),
-                                  tags_hash.dig('results', key, 'collectionName'),
-                                  tags_hash.dig('results', key, 'trackName'),
-                                  tags_hash.dig('results', key, 'releaseDate'),
-                                  tags_hash.dig('results', key, 'collectionExplicitness'),
-                                  tags_hash.dig('results', key, 'trackExplicitness'),
-                                  tags_hash.dig('results', key, 'discCount'),
-                                  tags_hash.dig('results', key, 'discNumber'),
-                                  tags_hash.dig('results', key, 'trackCount'),
-                                  tags_hash.dig('results', key, 'trackNumber'),
-                                  tags_hash.dig('results', key, 'trackTimeMillis'),
-                                  tags_hash.dig('results', key, 'country'),
-                                  tags_hash.dig('results', key, 'currency'),
-                                  tags_hash.dig('results', key, 'primaryGenreName'))
+            info = Array.new
+            (0..ITUNES_TAG_KEYS.length).each { |index|
+              info.push(tags_hash.dig('results', key, ITUNES_TAG_KEYS[index]))
+            }
             return info
           end
         end
@@ -125,7 +106,7 @@ class TuneSort
         genres.each { |genre|
           unless genre.nil?
             if genre['name'].to_s.include? genre_name
-              return Array.new.push(genre['name'].to_s, genre['id'].to_i)
+              return Array.new.push(genre['name'], genre['id'])
             end
           end
         }
@@ -161,6 +142,13 @@ class TuneSort
   def set_track_id(track_id, song)
     unless track_id.nil?
       system("mp4tags -contentid #{track_id.to_i} #{song}")
+    end
+  end
+
+  def set_genre(genre, genre_id, song)
+    unless track_id.nil?
+      system("mp4tags -genreid #{genre_id.to_i} #{song}")
+      system("mp4tags -genre #{genre.to_s} #{song}")
     end
   end
 
