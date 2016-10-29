@@ -124,8 +124,10 @@ class TuneSort
 
   def get_tempo(artist, track)
     RSpotify.authenticate(CLIENT_ID, CLIENT_SECRET)
-    RSpotify::Track.search(artist + ' ' + track).max_by { |element|
-      element.audio_features.tempo.round }.audio_features.tempo.round
+    unless RSpotify::Track.search(artist.downcase + ' ' + track.downcase).all? &:nil?
+      RSpotify::Track.search(artist.downcase + ' ' + track.downcase).max_by { |element|
+        element.audio_features.tempo.round }.audio_features.tempo.round
+    end
   end
 
   def set_artist_id(artist_id, song)
@@ -150,7 +152,6 @@ class TuneSort
 
   def remove_tag_files
     File.delete(@directory + '/itunes_tags.json',
-                @directory + '/spotify_tags.json',
                 @directory + '/wiki_tags.json')
   end
 end
