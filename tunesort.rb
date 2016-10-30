@@ -15,10 +15,10 @@ class TuneSort
   CLIENT_SECRET = '68c60cc5600c48e0ab6f28f5a5e24040'
 
   ITUNES_TAG_KEYS = Array.new.push('artistId', 'collectionId', 'trackId', 'artistName',
-                                   'collectionName', 'trackName', 'releaseDate',
-                                   'collectionExplicitness', 'trackExplicitness',
-                                   'discCount', 'discNumber', 'trackCount',
-                                   'trackNumber', 'trackTimeMillis',
+                                   'collectionName', 'trackName', 'artworkUrl100',
+                                   'releaseDate', 'collectionExplicitness',
+                                   'trackExplicitness', 'discCount', 'discNumber',
+                                   'trackCount', 'trackNumber', 'trackTimeMillis',
                                    'country', 'currency', 'primaryGenreName')
 
   def initialize(directory)
@@ -29,20 +29,10 @@ class TuneSort
     end
   end
 
-  def os
-    case RUBY_PLATFORM
-      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-        return 'windows'
-      when /darwin|mac os/
-        return 'macos'
-      else
-        raise SystemCallError.new('Operating System is not supported', 1)
-    end
-  end
-
   def get_tags(artist, album)
     unless File.exists?(@directory + '/itunes_tags.json')
-      lookup = 'https://itunes.apple.com/search?term=' + (artist + ' ' + album).downcase.gsub!(' ', '+')
+      lookup = 'https://itunes.apple.com/search?term=' +
+          (artist + ' ' + album).downcase.gsub!(' ', '+')
       File.write(@directory + '/itunes_tags.json', Net::HTTP.get(URI.parse(lookup)))
     end
   end
@@ -98,8 +88,14 @@ class TuneSort
     end
   end
 
+  def get_artwork(artwork_url)
+    artwork_url = artwork_url.gsub!(/100x100bb.jpg/, '1000000000x1000000000bb.jpg')
+    File.write(@directory + '/artwork.jpg', Net::HTTP.get(URI.parse(artwork_url)))
+  end
+
   def get_genre(genre_name)
-    genre_appendix_lookup = 'http://itunes.apple.com/WebObjects/MZStoreServices.woa/ws/genres'
+    genre_appendix_lookup =
+        'http://itunes.apple.com/WebObjects/MZStoreServices.woa/ws/genres'
     unless genre_name.nil?
       genre_appendix = JSON.parse(Net::HTTP.get(URI.parse(genre_appendix_lookup)))
       genre_appendix['34']['subgenres'].each { |genres|
@@ -145,8 +141,14 @@ class TuneSort
     end
   end
 
+  def set_artwork(song)
+    if File.exists?(@directory + '/artwork.jpg')
+      system("mp4tags -picture #{@directory + '/artwork.jpg'} #{song}")
+    end
+  end
+
   def set_genre(genre, genre_id, song)
-    unless track_id.nil?
+    unless genre_id.nil? or genre.nil?
       system("mp4tags -genreid #{genre_id.to_i} #{song}")
       system("mp4tags -genre #{genre.to_s} #{song}")
     end
@@ -164,8 +166,28 @@ class TuneSort
     end
   end
 
-  def remove_tag_files
+  def remove_files
     File.delete(@directory + '/itunes_tags.json',
+                @directory + '/artwork.jpg',
                 @directory + '/wiki_tags.json')
+  end
+
+  def os
+    case RUBY_PLATFORM
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        return 'windows'
+      when /darwin|mac os/
+        return 'macos'
+      else
+        raise SystemCallError.new('Operating System is not supported', 1)
+    end
+  end
+
+  def open_itunes
+    if os == 'macos'
+      system('open -W /Applications/iTunes.app')
+    elsif os == 'windows'
+      system('start /wait "C:\Program Files\iTunes\iTunes.exe"')
+    end
   end
 end
