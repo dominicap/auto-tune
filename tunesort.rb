@@ -2,6 +2,7 @@
 
 # @date: October 22, 2016
 # @author: Dominic Philip
+# @abstract: A simple music tagging, sorting and organizing library written in ruby
 # @version: 0.1
   
 require 'json'
