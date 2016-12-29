@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["domi.a.philip@gmail.com"]
 
   spec.summary       = "A music auto-tagging library using the iTunes API"
-  spec.description   = "TuneSort is a library that automates the task of tagging music with the help of the iTunes Affiliates API."
+  spec.description   = "TuneSort is a library that automates the task of tagging music with the help of the iTunes Affiliates Search API."
   spec.homepage      = "https://github.com/dominicap/tune-sort"
   spec.license       = "MIT"
 
@@ -21,6 +21,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.13"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rake", "~> 12.0"
+  spec.add_development_dependency "rspec", "~> 3.4"
 end
