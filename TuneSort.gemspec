@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dominic Antony Philip"]
   spec.email         = ["domi.a.philip@gmail.com"]
 
-  spec.summary       = "A music auto-tagging library using the iTunes API"
-  spec.description   = "TuneSort is a library that automates the task of tagging music with the help of the iTunes Affiliates Search API."
+  spec.summary       = "A music auto-tagging library using the iTunes API & Spotify API"
+  spec.description   = "TuneSort is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API & Spotify API."
   spec.homepage      = "https://github.com/dominicap/tune-sort"
   spec.license       = "MIT"
 
