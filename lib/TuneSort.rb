@@ -1,5 +1,6 @@
-require "tunesort/version"
-
 module TuneSort
-  # Your code goes here...
+  require "tunesort/designator"
+  require "tunesort/obtainer"
+  require "tunesort/util"
+  require "tunesort/version"
 end
