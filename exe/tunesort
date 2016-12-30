@@ -6,7 +6,7 @@ require 'tunesort'
 options = { album: nil, artist: nil, directory: nil, deluxe: false }
 ARGV << '--help' if ARGV.empty?
 
-overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes API'
+overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes & Spotify API'
 usage_msg    = 'USAGE: tunesort [options] <inputs>'
 options_msg  = 'OPTIONS:'
 
