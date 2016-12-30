@@ -7,5 +7,6 @@ RUN mkdir temp && cd temp && curl http://taglib.org/releases/taglib-1.11.1.tar.g
 RUN cd /temp && tar -xzvf taglib*
 RUN cd /temp/taglib* && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release . && make && make install
 RUN gem install taglib-ruby
+RUN rm -rf /temp
 
 CMD ["/bin/bash"]
