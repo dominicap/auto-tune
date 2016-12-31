@@ -8,5 +8,6 @@ RUN cd /temp && tar -xzvf taglib*
 RUN cd /temp/taglib* && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release . && make && make install
 RUN gem install taglib-ruby
 RUN rm -rf /temp
+RUN apt-get autoremove && apt-get clean
 
 CMD ["/bin/bash"]
