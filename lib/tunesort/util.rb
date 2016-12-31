@@ -17,7 +17,7 @@ module TuneSort
 
     def self.parse(directory, track_number)
       if File.exist?(directory + '/itunes_tags.json')
-        tags_hash = tags_hash = JSON.parse(File.read(directory + '/itunes_tags.json'))
+        tags_hash = JSON.parse(File.read(directory + '/itunes_tags.json'))
         unless tags_hash['resultCount'].to_i.zero?
           (0..tags_hash['resultCount'].to_i).each do |key|
             itunes_track_number = tags_hash.dig('results', key, 'trackNumber').to_i
