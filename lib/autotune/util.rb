@@ -1,7 +1,7 @@
 require 'find'
 require 'json'
 
-module TuneSort
+module AutoTune
   class Util
 
     ITUNES_TAG_KEYS = Array.new.push('artistId', 'collectionId', 'trackId', 'artistName',

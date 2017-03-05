@@ -1,15 +1,15 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'tunesort/version'
+require 'autotune/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "tunesort"
-  spec.version       = TuneSort::VERSION
+  spec.name          = "autotune"
+  spec.version       = AutoTune::VERSION
   spec.authors       = ["Dominic Antony Philip"]
   spec.email         = ["domi.a.philip@gmail.com"]
 
   spec.summary       = "A music auto-tagging library using the iTunes API & Spotify API"
-  spec.description   = "TuneSort is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API & Spotify API."
+  spec.description   = "AutoTune is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API & Spotify API."
   spec.homepage      = "https://github.com/dominicap/tune-sort"
   spec.license       = "MIT"
 

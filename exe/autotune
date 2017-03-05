@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'tunesort'
+require 'autotune'
 
 options = { album: nil, artist: nil, directory: nil, deluxe: false }
 ARGV << '--help' if ARGV.empty?
 
 overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes & Spotify API'
-usage_msg    = 'USAGE: tunesort [options] <inputs>'
+usage_msg    = 'USAGE: autotune [options] <inputs>'
 options_msg  = 'OPTIONS:'
 
 option_parser = OptionParser.new do |opts|
@@ -31,7 +31,7 @@ option_parser = OptionParser.new do |opts|
   directory_help_msg = 'Pass in the directory path as argument'
   opts.on('-d', '--directory <directory>', directory_help_msg) do |directory|
     unless File.exist?(File.expand_path(directory.to_s))
-      abort 'tunesort: error: directory path does not exist'
+      abort 'autotune: error: directory path does not exist'
     end
     options[:directory] = File.expand_path(directory.to_s)
   end
@@ -42,7 +42,7 @@ option_parser = OptionParser.new do |opts|
   end
 
   opts.on('-v', '--version', 'Displays the version number') do
-    puts 'tunesort version ' + TuneSort::VERSION
+    puts 'autotune version ' + AutoTune::VERSION
     exit
   end
 end
@@ -50,26 +50,26 @@ end
 begin
   option_parser.parse!
 rescue OptionParser::InvalidOption
-  abort 'tunesort: error: invalid option(s)'
+  abort 'autotune: error: invalid option(s)'
 end
 
 options.each do |_option, argument|
-  abort 'tunesort: error: too few arguments' if argument.nil?
+  abort 'autotune: error: too few arguments' if argument.nil?
 end
 
-paths = TuneSort::Util.paths(options[:directory])
+paths = AutoTune::Util.paths(options[:directory])
 
-TuneSort::Obtainer.get_tags(options[:album], options[:artist], options[:directory])
+AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:directory])
 
 paths.each do |path|
-  track_number = TuneSort::Obtainer.get_track_number(path)
+  track_number = AutoTune::Obtainer.get_track_number(path)
 
   until track_number > 0
     print "Please enter the track number for #{File.basename(path)}: "
     track_number = STDIN.gets.chomp.to_i
   end
 
-  puts TuneSort::Util.parse(options[:directory], track_number)
+  puts AutoTune::Util.parse(options[:directory], track_number)
 end
 
 system('rm ~/Desktop/itunes_tags.json')

@@ -2,7 +2,7 @@ require 'json'
 require 'net/http'
 require 'taglib'
 
-module TuneSort
+module AutoTune
   class Obtainer
     def self.get_tags(album, artist, directory)
       album_id = get_album_id(album, artist, directory)
