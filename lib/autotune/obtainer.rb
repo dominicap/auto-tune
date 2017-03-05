@@ -4,8 +4,8 @@ require 'taglib'
 
 module AutoTune
   class Obtainer
-    def self.get_tags(album, artist, directory)
-      album_id = get_album_id(album, artist, directory)
+    def self.get_tags(album, artist)
+      album_id = get_album_id(album, artist)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}&entity=song"
       return Net::HTTP.get(URI.parse(lookup))
     end
@@ -16,7 +16,7 @@ module AutoTune
       end
     end
 
-    def self.get_album_id(album, artist, directory)
+    def self.get_album_id(album, artist)
       lookup = 'https://itunes.apple.com/search?term='
       query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'
       album_ids_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
