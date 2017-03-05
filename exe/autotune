@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# Dominic Philip
-
 require 'optparse'
 require 'autotune'
 
