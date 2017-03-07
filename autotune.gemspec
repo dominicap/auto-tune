@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "A music auto-tagging library using the iTunes API & Spotify API"
   spec.description   = "AutoTune is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API & Spotify API."
-  spec.homepage      = "https://github.com/dominicap/tune-sort"
+  spec.homepage      = "https://github.com/dominicap/auto-tune"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
