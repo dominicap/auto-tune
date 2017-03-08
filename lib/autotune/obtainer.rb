@@ -21,15 +21,15 @@ module AutoTune
       query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'
       album_ids_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
       unless album_ids_hash['resultCount'].to_i.zero?
-        (0..tags_hash['resultCount'].to_i).each do |key|
-          itunes_rating = tags_hash.dig('results', key, 'contentAdvisoryRating')
+        (0..album_ids_hash['resultCount'].to_i).each do |key|
+          itunes_rating = album_ids_hash.dig('results', key, 'contentAdvisoryRating')
           unless itunes_rating == 'clean'
-            return tags_hash.dig('results', key, 'collectionId')
+            return album_ids_hash.dig('results', key, 'collectionId')
           end
         end
       end
     end
 
-    private_class_method :self.get_album_id
+    private_class_method :get_album_id
   end
 end

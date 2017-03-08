@@ -57,9 +57,11 @@ options.each do |_option, argument|
   abort 'autotune: error: too few arguments' if argument.nil?
 end
 
-paths = AutoTune::Util.paths(options[:directory])
+paths  = AutoTune::Util.paths(options[:directory])
+artist = options[:artist]
+album  = options[:album]
 
-AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:directory])
+album_tags = AutoTune::Obtainer.get_tags(album, artist)
 
 paths.each do |path|
   track_number = AutoTune::Obtainer.get_track_number(path)
