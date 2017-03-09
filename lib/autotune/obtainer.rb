@@ -7,7 +7,7 @@ module AutoTune
     def self.get_tags(album, artist)
       album_id = get_album_id(album, artist)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}&entity=song"
-      return Net::HTTP.get(URI.parse(lookup))
+      return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
     end
 
     def self.get_track_number(song)
@@ -16,8 +16,9 @@ module AutoTune
       end
     end
 
-    def self.get_copyright(album_id)
-      lookup = "https://itunes.apple.com/us/album/id#{id}"
+    def self.get_copyright(album, artist)
+      album_id = get_album_id(album, artist)
+      lookup = "https://itunes.apple.com/us/album/id#{album_id}"
       return Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
     end
 
@@ -38,3 +39,5 @@ module AutoTune
     private_class_method :get_album_id
   end
 end
+
+puts AutoTune::Obtainer.get_copyright('culture', 'migos')
