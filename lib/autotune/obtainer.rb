@@ -25,12 +25,12 @@ module AutoTune
     def self.get_album_id(album, artist)
       lookup = 'https://itunes.apple.com/search?term='
       query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'
-      album_ids_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
-      unless album_ids_hash['resultCount'].to_i.zero?
-        (0..album_ids_hash['resultCount'].to_i).each do |key|
-          itunes_rating = album_ids_hash.dig('results', key, 'contentAdvisoryRating')
+      result_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
+      unless result_hash['resultCount'].to_i.zero?
+        (0..result_hash['resultCount'].to_i).each do |key|
+          itunes_rating = result_hash.dig('results', key, 'contentAdvisoryRating')
           unless itunes_rating == 'clean'
-            return album_ids_hash.dig('results', key, 'collectionId')
+            return result_hash.dig('results', key, 'collectionId')
           end
         end
       end
@@ -39,5 +39,3 @@ module AutoTune
     private_class_method :get_album_id
   end
 end
-
-puts AutoTune::Obtainer.get_copyright('culture', 'migos')
