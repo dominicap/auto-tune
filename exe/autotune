@@ -71,7 +71,5 @@ paths.each do |path|
     track_number = STDIN.gets.chomp.to_i
   end
 
-  puts AutoTune::Util.parse(options[:directory], track_number)
+  puts AutoTune::Util.parse(album_tags, track_number)
 end
-
-system('rm ~/Desktop/itunes_tags.json')

@@ -16,6 +16,11 @@ module AutoTune
       end
     end
 
+    def self.get_copyright(album_id)
+      lookup = "https://itunes.apple.com/us/album/id#{id}"
+      return Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
+    end
+
     def self.get_album_id(album, artist)
       lookup = 'https://itunes.apple.com/search?term='
       query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'

@@ -15,8 +15,17 @@ module AutoTune
       Array.new(Find.find(directory).select { |p| /.*\.M4A$/i =~ p || /.*\.MP3$/i =~ p })
     end
 
-    def self.parse(directory, track_number)
-      # TODO - Redo the method according to changes in obtainer.
+    def self.parse(tags_hash, track_number)
+      (0..tags_hash['resultCount'].to_i).each { |key|
+        itunes_track_number = tags_hash.dig('results', key, 'trackNumber')
+        if track_number == itunes_track_number.to_i
+          info = Array.new
+          (0..ITUNES_TAG_KEYS.length).each { |index|
+            info.push(tags_hash.dig('results', key, ITUNES_TAG_KEYS[index]))
+          }
+          return info
+        end
+      }
     end
   end
 end
