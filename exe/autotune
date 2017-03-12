@@ -3,7 +3,7 @@
 require 'optparse'
 require 'autotune'
 
-options = { album: nil, artist: nil, directory: nil, deluxe: false }
+options = { album: nil, artist: nil, directory: nil, deluxe: false, clean: false }
 ARGV << '--help' if ARGV.empty?
 
 overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes & Spotify API'
@@ -21,6 +21,11 @@ option_parser = OptionParser.new do |opts|
   artist_help_msg = 'Pass in artist name as argument'
   opts.on('-s', '--artist <artist>', artist_help_msg) do |artist|
     options[:artist] = artist.to_s
+  end
+
+  clean_help_msg = 'Use clean version of album, if applicable'
+  opts.on('-c', '--clean', clean_help_msg) do |clean|
+    options[:clean] = true unless clean.nil?
   end
 
   deluxe_help_msg = 'Use deluxe version of album, if applicable'
