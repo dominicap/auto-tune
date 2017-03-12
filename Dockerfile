@@ -11,4 +11,8 @@ RUN gem install taglib-ruby
 RUN rm -rf /temp
 RUN apt-get autoremove && apt-get clean
 
+RUN mkdir /resources/
+COPY . /resources/
+RUN cd /resources/ && gem build autotune.gemspec && gem install ./*.gem
+
 CMD ["/bin/bash"]
