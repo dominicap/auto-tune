@@ -27,5 +27,14 @@ module AutoTune
         end
       }
     end
+
+    def self.os
+      case RUBY_PLATFORM
+        when /darwin|mac os/
+          return 'macos'
+        else
+          raise SystemCallError.new('Operating System is not supported', 1)
+      end
+    end
   end
 end

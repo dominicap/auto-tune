@@ -11,9 +11,13 @@ module AutoTune
     end
 
     def self.get_artwork(artwork_url, directory)
-      artwork_url = artwork_url.gsub!(/100x100bb.jpg/, '1000000000x1000000000bb.jpg')
-      File.write(directory + '/artwork.jpg', Net::HTTP.get(URI.parse(URI.encode(artwork_url))))
-      return directory + '/artwork.jpg'
+      if File.exists?(directory + '/artwork.jpg')
+        return directory + '/artwork.jpg'
+      elsif
+        artwork_url = artwork_url.gsub!(/100x100bb.jpg/, '1000000000x1000000000bb.jpg')
+        File.write(directory + '/artwork.jpg', Net::HTTP.get(URI.parse(URI.encode(artwork_url.to_s))))
+        return directory + '/artwork.jpg'
+      end
     end
 
     def self.get_track_number(song)

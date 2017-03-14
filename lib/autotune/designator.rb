@@ -150,6 +150,20 @@ module AutoTune
       end
     end
 
+    def self.set_disk_number(disk_number, total_disks, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless disk_number.nil? || total_disks.nil?
+              item = TagLib::MP4::Item.from_int_pair([disk_number, total_disks])
+              tune.tag.item_list_map.insert('disk', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
     def self.set_playlist_id(playlist_id, song)
       unless song.nil?
         if song =~ /.*\.M4A$/i

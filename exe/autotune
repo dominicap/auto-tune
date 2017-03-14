@@ -79,9 +79,19 @@ paths.each do |path|
 
   tune_info = AutoTune::Util.parse(album_tags, track_number)
 
-  AutoTune::Designator.set_artist(tune_info[3], path)
-  AutoTune::Designator.set_album(tune_info[4], path)
-  AutoTune::Designator.set_title(tune_info[5], path)
-  AutoTune::Designator.set_copyright(AutoTune::Obtainer.get_copyright(album, artist), path)
-  AutoTune::Designator.set_artwork(AutoTune::Obtainer.get_artwork(tune_info[6], directory), path)
+  directory_name = "#{File.dirname(path)}/converted"
+  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+  new_path = "#{directory_name}/#{File.basename(path, File.extname(path))}.m4a"
+
+  if AutoTune::Util.os == 'macos'
+    system("afconvert #{path} -f m4af -d aac -b 256000 -q 127 -s 2 #{new_path}") # TODO Push for Higher Quality
+  end
+
+  AutoTune::Designator.set_artist(tune_info[3], new_path)
+  AutoTune::Designator.set_album(tune_info[4], new_path)
+  AutoTune::Designator.set_title(tune_info[5], new_path)
+  AutoTune::Designator.set_track_number(tune_info[13], tune_info[12], new_path)
+  AutoTune::Designator.set_disk_number(tune_info[11], tune_info[10], new_path)
+  AutoTune::Designator.set_copyright(AutoTune::Obtainer.get_copyright(album, artist), new_path)
+  AutoTune::Designator.set_artwork(AutoTune::Obtainer.get_artwork(tune_info[6], directory), new_path)
 end
