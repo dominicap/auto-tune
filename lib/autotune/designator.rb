@@ -32,6 +32,16 @@ module AutoTune
       end
     end
 
+    def self.track_number(track_number, song)
+      unless song.nil?
+        TagLib::FileRef.open(song) do |tune|
+          unless tune.null?
+            tune.tag.track_number(track_number)
+          end
+        end
+      end
+    end
+
     def self.set_copyright(copyright, song)
       unless song.nil?
         if song =~ /.*\.MP3$/i
@@ -87,6 +97,20 @@ module AutoTune
             unless catalogue_id.nil?
               item = TagLib::MP4::Item.from_string_list([catalogue_id])
               tune.tag.item_list_map.insert('cnID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_track_number(track_number, total_tracks, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless track_number.nil? || total_tracks.nil?
+              item = TagLib::MP4::Item.from_int_pair([track_number, total_tracks])
+              tune.tag.item_list_map.insert('trkn', item)
               tune.save
             end
           end
