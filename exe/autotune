@@ -62,12 +62,20 @@ options.each do |_option, argument|
   abort 'autotune: error: too few arguments' if argument.nil?
 end
 
+unless AutoTune::Util.os == 'macos'
+  abort 'autotune: error: operating system not compatible'
+end
+
 artist = options[:artist]
 album  = options[:album]
 directory = options[:directory]
 paths  = AutoTune::Util.paths(directory)
 
 album_tags = AutoTune::Obtainer.get_tags(album, artist)
+
+if album_tags['resultCount'].to_i.zero?
+  abort "autotune: error: no results from iTunes with artist named: #{artist}, and album named: #{album}"
+end
 
 paths.each do |path|
   track_number = AutoTune::Obtainer.get_track_number(path)
@@ -79,14 +87,14 @@ paths.each do |path|
 
   tune_info = AutoTune::Util.parse(album_tags, track_number)
 
-  directory_name = "#{File.dirname(path)}/converted"
-  Dir.mkdir(directory_name) unless File.exists?(directory_name)
-  new_path = "#{directory_name}/#{File.basename(path, File.extname(path))}.m4a"
+  new_path = AutoTune::Util.make_dirs(path)
 
-  if AutoTune::Util.os == 'macos'
-    system("afconvert #{path} -f m4af -d aac -b 256000 -q 127 -s 2 #{new_path}") # TODO Push for Higher Quality
-  end
+  AutoTune::Util.convert(path, new_path)
 
+  AutoTune::Designator.set_artist_id(tune_info[0], new_path)
+  AutoTune::Designator.set_playlist_id(tune_info[1], new_path)
+  AutoTune::Designator.set_catalogue_id(tune_info[2], new_path)
+  AutoTune::Designator.set_release_date(tune_info[7], new_path)
   AutoTune::Designator.set_artist(tune_info[3], new_path)
   AutoTune::Designator.set_album(tune_info[4], new_path)
   AutoTune::Designator.set_title(tune_info[5], new_path)
