@@ -26,10 +26,31 @@ module AutoTune
       end
     end
 
+    def self.get_genre_id(genre_name)
+      genre_appendix_lookup =
+          'http://itunes.apple.com/WebObjects/MZStoreServices.woa/ws/genres'
+      unless genre_name.nil?
+        genre_appendix = JSON.parse(Net::HTTP.get(URI.parse(genre_appendix_lookup)))
+        genre_appendix['34']['subgenres'].each { |genres|
+          genres.each { |genre|
+            unless genre.nil?
+              if genre['name'].to_s.include? genre_name
+                return genre['id']
+              end
+            end
+          }
+        }
+      end
+    end
+
     def self.get_copyright(album, artist)
       album_id = get_album_id(album, artist)
       lookup = "https://itunes.apple.com/us/album/id#{album_id}"
       return Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
+    end
+
+    def self.get_album_artist(result_hash)
+      return AutoTune::Util.parse(result_hash, 0)[3].to_s
     end
 
     def self.get_album_id(album, artist)

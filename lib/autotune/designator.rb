@@ -24,6 +24,17 @@ module AutoTune
       end
     end
 
+    def self.set_genre(genre, song)
+      unless song.nil?
+        TagLib::FileRef.open(song) do |tune|
+          unless tune.null?
+            tune.tag.genre = genre
+            tune.save
+          end
+        end
+      end
+    end
+
     def self.set_release_date(release_date, song)
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
@@ -225,6 +236,30 @@ module AutoTune
               item = TagLib::MP4::Item.from_int(genre_id)
               tune.tag.item_list_map.insert('geID', item)
               tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_rating(rating, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless rating.nil?
+              if rating.include? 'clean'
+                item = TagLib::MP4::Item.from_int(2)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              elsif rating.include? 'explicit'
+                item = TagLib::MP4::Item.from_int(1)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              elsif rating.include? 'notExplicit'
+                item = TagLib::MP4::Item.from_int(0)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              end
             end
           end
         end
