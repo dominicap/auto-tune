@@ -67,10 +67,10 @@ module AutoTune
         if song =~ /.*\.MP3$/i
           TagLib::MPEG::File.open(song) do |tune|
             tag = tune.id3v2_tag
-            text_identification_frame = TagLib::ID3v2::TextIdentificationFrame.new('TCOP', TagLib::String::UTF8)
+            frame = TagLib::ID3v2::TextIdentificationFrame.new('TCOP', TagLib::String::UTF8)
             unless copyright.nil?
-              text_identification_frame.text = copyright
-              tag.add_frame(text_identification_frame)
+              frame.text = copyright
+              tag.add_frame(frame)
               tune.save
             end
           end
@@ -91,10 +91,10 @@ module AutoTune
         if song =~ /.*\.MP3$/i
           TagLib::MPEG::File.open(song) do |tune|
             tag = tune.id3v2_tag
-            text_identification_frame = TagLib::ID3v2::TextIdentificationFrame.new('TPE2', TagLib::String::UTF8)
+            frame = TagLib::ID3v2::TextIdentificationFrame.new('TPE2', TagLib::String::UTF8)
             unless album_artist.nil?
-              text_identification_frame.text = album_artist
-              tag.add_frame(text_identification_frame) #tpe2
+              frame.text = album_artist
+              tag.add_frame(frame)
               tune.save
             end
           end
