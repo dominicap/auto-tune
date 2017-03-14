@@ -62,9 +62,10 @@ options.each do |_option, argument|
   abort 'autotune: error: too few arguments' if argument.nil?
 end
 
-paths  = AutoTune::Util.paths(options[:directory])
 artist = options[:artist]
 album  = options[:album]
+directory = options[:directory]
+paths  = AutoTune::Util.paths(directory)
 
 album_tags = AutoTune::Obtainer.get_tags(album, artist)
 
@@ -76,5 +77,11 @@ paths.each do |path|
     track_number = STDIN.gets.chomp.to_i
   end
 
-  puts AutoTune::Util.parse(album_tags, track_number)
+  tune_info = AutoTune::Util.parse(album_tags, track_number)
+
+  AutoTune::Designator.set_artist(tune_info[3], path)
+  AutoTune::Designator.set_album(tune_info[4], path)
+  AutoTune::Designator.set_title(tune_info[5], path)
+  AutoTune::Designator.set_copyright(AutoTune::Obtainer.get_copyright(album, artist), path)
+  AutoTune::Designator.set_artwork(AutoTune::Obtainer.get_artwork(tune_info[6], directory), path)
 end

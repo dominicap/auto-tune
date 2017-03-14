@@ -10,6 +10,12 @@ module AutoTune
       return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
     end
 
+    def self.get_artwork(artwork_url, directory)
+      artwork_url = artwork_url.gsub!(/100x100bb.jpg/, '1000000000x1000000000bb.jpg')
+      File.write(directory + '/artwork.jpg', Net::HTTP.get(URI.parse(URI.encode(artwork_url))))
+      return directory + '/artwork.jpg'
+    end
+
     def self.get_track_number(song)
       TagLib::FileRef.open(song) do |tune|
         return tune.tag.track unless tune.nil?

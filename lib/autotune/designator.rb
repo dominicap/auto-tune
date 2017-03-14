@@ -6,7 +6,8 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.artist(artist)
+            tune.tag.artist = artist
+            tune.save
           end
         end
       end
@@ -16,7 +17,8 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.album(album)
+            tune.tag.album = album
+            tune.save
           end
         end
       end
@@ -26,7 +28,8 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.title(title)
+            tune.tag.title = title
+            tune.save
           end
         end
       end
@@ -36,7 +39,36 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.track_number(track_number)
+            tune.tag.track_number = track_number
+            tune.save
+          end
+        end
+      end
+    end
+
+    def self.set_artwork(artwork, song)
+      unless song.nil?
+        if song =~ /.*\.MP3$/i
+          TagLib::MPEG::File.open(song) do |tune|
+            tag = tune.id3v2_tag
+            frame = TagLib::ID3v2::AttachedPictureFrame.new
+            unless artwork.nil?
+              frame.mime_type = "image/jpeg"
+              frame.type = TagLib::ID3v2::AttachedPictureFrame::FrontCover
+              frame.picture = File.open(artwork, 'rb') { |f| f.read }
+              tag.add_frame(frame)
+              tune.save
+            end
+          end
+        elsif song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless artwork.nil?
+              image_data = File.open(artwork, 'rb') { |f| f.read }
+              cover_art = TagLib::MP4::CoverArt.new(TagLib::MP4::CoverArt::JPEG, image_data)
+              item = TagLib::MP4::Item.from_cover_art_list([cover_art])
+              tune.tag.item_list_map.insert('covr', item)
+              tune.save
+            end
           end
         end
       end
