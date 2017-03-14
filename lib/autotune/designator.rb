@@ -22,41 +22,11 @@ module AutoTune
       end
     end
 
-    def self.set_year(year, song)
-      unless song.nil?
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.year(year)
-          end
-        end
-      end
-    end
-
-    def self.set_track(track, song)
-      unless song.nil?
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.track(track)
-          end
-        end
-      end
-    end
-
     def self.set_title(title, song)
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.title(title)
-          end
-        end
-      end
-    end
-
-    def self.set_genre(genre, song)
-      unless song.nil?
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.genre(genre)
           end
         end
       end
@@ -110,13 +80,69 @@ module AutoTune
       end
     end
 
-    def self.set_content_id(content_id, song)
+    def self.set_catalogue_id(catalogue_id, song)
       unless song.nil?
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
-            unless content_id.nil?
-              item = TagLib::MP4::Item.from_string_list([content_id])
+            unless catalogue_id.nil?
+              item = TagLib::MP4::Item.from_string_list([catalogue_id])
               tune.tag.item_list_map.insert('cnID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_playlist_id(playlist_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless playlist_id.nil?
+              item = TagLib::MP4::Item.from_string_list([playlist_id])
+              tune.tag.item_list_map.insert('plID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_artist_id(artist_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless artist_id.nil?
+              item = TagLib::MP4::Item.from_string_list([artist_id])
+              tune.tag.item_list_map.insert('atID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_composer_id(composer_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless composer_id.nil?
+              item = TagLib::MP4::Item.from_string_list([composer_id])
+              tune.tag.item_list_map.insert('cmID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_genre_id(genre_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless genre_id.nil?
+              item = TagLib::MP4::Item.from_string_list([genre_id])
+              tune.tag.item_list_map.insert('geID', item)
               tune.save
             end
           end
