@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'autotune'
+
+options = { album: nil, artist: nil, directory: nil, deluxe: false, clean: false }
+ARGV << '--help' if ARGV.empty?
+
+overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes & Spotify API'
+usage_msg    = 'USAGE: autotune [options] <inputs>'
+options_msg  = 'OPTIONS:'
+
+option_parser = OptionParser.new do |opts|
+  opts.banner = overview_msg + "\n\n" + usage_msg + "\n\n" + options_msg + "\n"
+
+  album_help_msg = 'Pass in album Name as argument'
+  opts.on('-a', '--album <album>', album_help_msg) do |album|
+    options[:album] = album.to_s
+  end
+
+  artist_help_msg = 'Pass in artist name as argument'
+  opts.on('-s', '--artist <artist>', artist_help_msg) do |artist|
+    options[:artist] = artist.to_s
+  end
+
+  clean_help_msg = 'Use clean version of album, if applicable'
+  opts.on('-c', '--clean', clean_help_msg) do |clean|
+    options[:clean] = true unless clean.nil?
+  end
+
+  deluxe_help_msg = 'Use deluxe version of album, if applicable'
+  opts.on('-x', '--deluxe', deluxe_help_msg) do |deluxe|
+    options[:deluxe] = true unless deluxe.nil?
+  end
+
+  directory_help_msg = 'Pass in the directory path as argument'
+  opts.on('-d', '--directory <directory>', directory_help_msg) do |directory|
+    unless File.exist?(File.expand_path(directory.to_s))
+      abort 'autotune: error: directory path does not exist'
+    end
+    options[:directory] = File.expand_path(directory.to_s)
+  end
+
+  opts.on('-h', '--help', 'Displays available options') do
+    puts opts
+    exit
+  end
+
+  opts.on('-v', '--version', 'Displays the version number') do
+    puts 'autotune version ' + AutoTune::VERSION
+    exit
+  end
+end
+
+begin
+  option_parser.parse!
+rescue OptionParser::InvalidOption
+  abort 'autotune: error: invalid option(s)'
+end
+
+options.each do |_option, argument|
+  abort 'autotune: error: too few arguments' if argument.nil?
+end
+
+unless AutoTune::Util.os == 'macos'
+  abort 'autotune: error: operating system not compatible'
+end
+
+artist = options[:artist]
+album  = options[:album]
+directory = options[:directory]
+paths  = AutoTune::Util.paths(directory)
+
+album_tags = AutoTune::Obtainer.get_tags(album, artist)
+
+if album_tags['resultCount'].to_i.zero?
+  abort "autotune: error: no results from iTunes with artist named: #{artist}, and album named: #{album}"
+end
+
+paths.each do |path|
+  track_number = AutoTune::Obtainer.get_track_number(path)
+
+  until track_number > 0
+    print "Please enter the track number for #{File.basename(path)}: "
+    track_number = STDIN.gets.chomp.to_i
+  end
+
+  tune_info = AutoTune::Util.parse(album_tags, track_number)
+
+  new_path = AutoTune::Util.make_dirs(path)
+
+  AutoTune::Util.convert(path, new_path)
+
+  AutoTune::Designator.set_artist_id(tune_info[0], new_path)
+  AutoTune::Designator.set_playlist_id(tune_info[1], new_path)
+  AutoTune::Designator.set_catalogue_id(tune_info[2], new_path)
+  AutoTune::Designator.set_release_date(tune_info[7], new_path)
+  AutoTune::Designator.set_rating(tune_info[9], new_path)
+  AutoTune::Designator.set_genre(tune_info[17], new_path)
+  AutoTune::Designator.set_artist(tune_info[3], new_path)
+  AutoTune::Designator.set_album_artist_name(AutoTune::Obtainer.get_album_artist(album_tags), new_path)
+  AutoTune::Designator.set_album(tune_info[4], new_path)
+  AutoTune::Designator.set_title(tune_info[5], new_path)
+  AutoTune::Designator.set_track_number(tune_info[13], tune_info[12], new_path)
+  AutoTune::Designator.set_disk_number(tune_info[11], tune_info[10], new_path)
+  AutoTune::Designator.set_genre_id(AutoTune::Obtainer.get_genre_id(tune_info[17]).to_i, new_path)
+  AutoTune::Designator.set_copyright(AutoTune::Obtainer.get_copyright(album, artist), new_path)
+  AutoTune::Designator.set_artwork(AutoTune::Obtainer.get_artwork(tune_info[6], directory), new_path)
+end
