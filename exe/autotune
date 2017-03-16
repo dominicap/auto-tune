@@ -74,14 +74,13 @@ unless AutoTune::Util.os == 'macos'
 end
 
 paths  = AutoTune::Util.paths(options[:directory])
-
 album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:clean], options[:deluxe])
 
 if album_tags['resultCount'].to_i.zero?
   abort "autotune: error: no results from iTunes with given arguments"
 end
 
-AutoTune::Obtainer.get_artwork(AutoTune::Util.parse(album_tags, 0)[6], options[:directory])
+AutoTune::Obtainer.get_artwork(album_tags, options[:directory])
 
 paths.each do |path|
   track_number = AutoTune::Obtainer.get_track_number(path)
@@ -93,6 +92,6 @@ paths.each do |path|
 
   tune_tags = AutoTune::Util.parse(album_tags, track_number)
 
-  AutoTune::Util.convert(path, '-f m4af -d aac -b 256000 -q 127 -s 2')
+  AutoTune::Util.convert(path, '-f m4af -d aac -b 256000 -q 127 -s 3')
 
 end

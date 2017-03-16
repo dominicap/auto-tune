@@ -17,7 +17,9 @@ module AutoTune
     end
 
     def self.convert(path, params)
-      # TODO: Fix this up
+      path = Shellwords.escape(path)
+      Dir.mkdir(File.dirname(path) + '/resources') unless File.exists?(File.dirname(path) + '/resources')
+      system("afconvert #{path} #{params} #{File.dirname(path) + "/resources/#{File.basename(path, '.*')}" + '.m4a'}")
     end
 
     def self.parse(result_hash, track_number)

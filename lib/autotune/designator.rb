@@ -261,5 +261,19 @@ module AutoTune
         end
       end
     end
+
+    def self.set_tempo(tempo, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless tempo.nil?
+              item = TagLib::MP4::Item.from_int(tempo)
+              tune.tag.item_list_map.insert('tmpo', tempo)
+              tune.save
+            end
+          end
+        end
+      end
+    end
   end
 end
