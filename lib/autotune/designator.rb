@@ -2,11 +2,53 @@ require 'taglib'
 
 module AutoTune
   class Designator
+    def self.set_artist_id(artist_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless artist_id.nil?
+              item = TagLib::MP4::Item.from_int(artist_id)
+              tune.tag.item_list_map.insert('atID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_playlist_id(playlist_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless playlist_id.nil?
+              item = TagLib::MP4::Item.from_int(playlist_id)
+              tune.tag.item_list_map.insert('plID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_catalogue_id(catalogue_id, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless catalogue_id.nil?
+              item = TagLib::MP4::Item.from_int(catalogue_id)
+              tune.tag.item_list_map.insert('cnID', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
     def self.set_artist(artist, song)
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.artist = artist
+            tune.tag.artist = artist unless artist.nil?
             tune.save
           end
         end
@@ -17,29 +59,7 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.album = album
-            tune.save
-          end
-        end
-      end
-    end
-
-    def self.set_genre(genre, song)
-      unless song.nil?
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.genre = genre
-            tune.save
-          end
-        end
-      end
-    end
-
-    def self.set_release_date(release_date, song)
-      unless song.nil?
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.year = release_date.to_i
+            tune.tag.album = album unless album.nil?
             tune.save
           end
         end
@@ -50,7 +70,53 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.title = title
+            tune.tag.title = title unless title.nil?
+            tune.save
+          end
+        end
+      end
+    end
+
+    def self.set_release_date(release_date, song)
+      unless song.nil?
+        TagLib::FileRef.open(song) do |tune|
+          unless tune.null?
+            tune.tag.year = release_date.to_i unless release_date.nil?
+            tune.save
+          end
+        end
+      end
+    end
+
+    def self.set_rating(rating, song)
+      unless song.nil?
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless rating.nil?
+              if rating.include? 'clean'
+                item = TagLib::MP4::Item.from_int(2)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              elsif rating.include? 'explicit'
+                item = TagLib::MP4::Item.from_int(1)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              elsif rating.include? 'notExplicit'
+                item = TagLib::MP4::Item.from_int(0)
+                tune.tag.item_list_map.insert('rtng', item)
+                tune.save
+              end
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_genre(genre, song)
+      unless song.nil?
+        TagLib::FileRef.open(song) do |tune|
+          unless tune.null?
+            tune.tag.genre = genre unless genre.nil?
             tune.save
           end
         end
@@ -61,7 +127,7 @@ module AutoTune
       unless song.nil?
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
-            tune.tag.track_number = track_number
+            tune.tag.track_number = track_number unless track_number.nil?
             tune.save
           end
         end
@@ -70,19 +136,7 @@ module AutoTune
 
     def self.set_artwork(artwork, song)
       unless song.nil?
-        if song =~ /.*\.MP3$/i
-          TagLib::MPEG::File.open(song) do |tune|
-            tag = tune.id3v2_tag
-            frame = TagLib::ID3v2::AttachedPictureFrame.new
-            unless artwork.nil?
-              frame.mime_type = "image/jpeg"
-              frame.type = TagLib::ID3v2::AttachedPictureFrame::FrontCover
-              frame.picture = File.open(artwork, 'rb') { |f| f.read }
-              tag.add_frame(frame)
-              tune.save
-            end
-          end
-        elsif song =~ /.*\.M4A$/i
+        if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless artwork.nil?
               image_data = File.open(artwork, 'rb') { |f| f.read }
@@ -98,17 +152,7 @@ module AutoTune
 
     def self.set_copyright(copyright, song)
       unless song.nil?
-        if song =~ /.*\.MP3$/i
-          TagLib::MPEG::File.open(song) do |tune|
-            tag = tune.id3v2_tag
-            frame = TagLib::ID3v2::TextIdentificationFrame.new('TCOP', TagLib::String::UTF8)
-            unless copyright.nil?
-              frame.text = copyright
-              tag.add_frame(frame)
-              tune.save
-            end
-          end
-        elsif song =~ /.*\.M4A$/i
+        if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless copyright.nil?
               item = TagLib::MP4::Item.from_string_list([copyright])
@@ -122,17 +166,7 @@ module AutoTune
 
     def self.set_album_artist_name(album_artist, song)
       unless song.nil?
-        if song =~ /.*\.MP3$/i
-          TagLib::MPEG::File.open(song) do |tune|
-            tag = tune.id3v2_tag
-            frame = TagLib::ID3v2::TextIdentificationFrame.new('TPE2', TagLib::String::UTF8)
-            unless album_artist.nil?
-              frame.text = album_artist
-              tag.add_frame(frame)
-              tune.save
-            end
-          end
-        elsif song =~ /.*\.M4A$/i
+        if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless album_artist.nil?
               item = TagLib::MP4::Item.from_string_list([album_artist])
@@ -200,20 +234,6 @@ module AutoTune
       end
     end
 
-    def self.set_artist_id(artist_id, song)
-      unless song.nil?
-        if song =~ /.*\.M4A$/i
-          TagLib::MP4::File.open(song) do |tune|
-            unless artist_id.nil?
-              item = TagLib::MP4::Item.from_int(artist_id)
-              tune.tag.item_list_map.insert('atID', item)
-              tune.save
-            end
-          end
-        end
-      end
-    end
-
     def self.set_composer_id(composer_id, song)
       unless song.nil?
         if song =~ /.*\.M4A$/i
@@ -236,30 +256,6 @@ module AutoTune
               item = TagLib::MP4::Item.from_int(genre_id)
               tune.tag.item_list_map.insert('geID', item)
               tune.save
-            end
-          end
-        end
-      end
-    end
-
-    def self.set_rating(rating, song)
-      unless song.nil?
-        if song =~ /.*\.M4A$/i
-          TagLib::MP4::File.open(song) do |tune|
-            unless rating.nil?
-              if rating.include? 'clean'
-                item = TagLib::MP4::Item.from_int(2)
-                tune.tag.item_list_map.insert('rtng', item)
-                tune.save
-              elsif rating.include? 'explicit'
-                item = TagLib::MP4::Item.from_int(1)
-                tune.tag.item_list_map.insert('rtng', item)
-                tune.save
-              elsif rating.include? 'notExplicit'
-                item = TagLib::MP4::Item.from_int(0)
-                tune.tag.item_list_map.insert('rtng', item)
-                tune.save
-              end
             end
           end
         end
