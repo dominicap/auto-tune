@@ -29,7 +29,11 @@ module AutoTune
 
     def self.get_tempo(album_tags, track_number)
       artist = AutoTune::Util.parse(album_tags, 0)[3]
-      title = AutoTune::Util.parse(album_tags, track_number)[5].slice(0..title.index('(') - 1)
+      title = AutoTune::Util.parse(album_tags, track_number)[5]
+      if title.include? '('
+        title = title.slice(0..title.index('(') - 1)
+      end
+      title.gsub!(/[^0-9A-Za-z]/, '')
       RSpotify.authenticate(CLIENT_ID, CLIENT_SECRET)
       unless RSpotify::Track.search(artist.downcase + ' ' + title.downcase).all? &:nil?
         RSpotify::Track.search(artist.downcase + ' ' + title.downcase).max_by { |element|
@@ -55,13 +59,13 @@ module AutoTune
     end
 
     def self.get_copyright(album_tags)
-      album_id = album_tags.dig(album_tags.dig('resultCount','results', 0, 'collectionId'))
+      album_id = AutoTune::Util.parse(album_tags, 0)[1]
       lookup = "https://itunes.apple.com/us/album/id#{album_id}"
       return Net::HTTP.get(URI.parse(lookup)).split(/<li class="copyright">(.*?)<\/li>/)[1]
     end
 
-    def self.get_album_artist(result_hash)
-      return AutoTune::Util.parse(result_hash, 0)[3].to_s
+    def self.get_album_artist(album_tags)
+      return AutoTune::Util.parse(album_tags, 0)[3].to_s
     end
 
     def self.get_album_id(album, artist, clean, deluxe)

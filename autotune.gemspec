@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.4"
 
-  spec.add_runtime_dependency "taglib-ruby", "~> 0.7.0"
-  spec.add_runtime_dependency "rspotify", "~> 1.19.1"
+  spec.add_runtime_dependency "taglib-ruby", "~> 0.7.0", ">= 0.7.0"
+  spec.add_runtime_dependency "rspotify", "~> 1.19", ">= 1.19.1"
 end
