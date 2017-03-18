@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dominic Antony Philip"]
   spec.email         = ["domi.a.philip@gmail.com"]
 
-  spec.summary       = "A music auto-tagging library using the iTunes API & Spotify API"
-  spec.description   = "AutoTune is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API & Spotify API."
+  spec.summary       = "A music auto-tagging library using the iTunes API"
+  spec.description   = "AutoTune is a library that automates the task of adding metadata to music with the help of the iTunes Affiliates Search API."
   spec.homepage      = "https://github.com/dominicap/auto-tune"
   spec.license       = "MIT"
 
@@ -25,5 +25,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.4"
 
   spec.add_runtime_dependency "taglib-ruby", "~> 0.7.0", ">= 0.7.0"
-  spec.add_runtime_dependency "rspotify", "~> 1.19", ">= 1.19.1"
 end

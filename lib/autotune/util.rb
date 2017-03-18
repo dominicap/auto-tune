@@ -1,6 +1,5 @@
 require 'find'
 require 'json'
-require 'shellwords'
 
 module AutoTune
   class Util
@@ -14,12 +13,6 @@ module AutoTune
 
     def self.paths(directory)
       Array.new(Find.find(directory).select { |p| /.*\.M4A$/i =~ p || /.*\.MP3$/i =~ p })
-    end
-
-    def self.convert(path, params)
-      path = Shellwords.escape(path)
-      Dir.mkdir(File.dirname(path) + '/resources') unless File.exists?(File.dirname(path) + '/resources')
-      system("afconvert #{path} #{params} #{File.dirname(path) + "/resources/#{File.basename(path, '.*')}" + '.m4a'}")
     end
 
     def self.parse(result_hash, track_number)

@@ -6,7 +6,7 @@ require 'autotune'
 options = { album: nil, artist: nil, directory: nil, deluxe: false, clean: false, single: false }
 ARGV << '--help' if ARGV.empty?
 
-overview_msg = 'OVERVIEW: A music auto-tagging program using the iTunes & Spotify API'
+overview_msg = 'OVERVIEW: A music auto-tagging library using the iTunes API'
 usage_msg    = 'USAGE: autotune [options] <inputs>'
 options_msg  = 'OPTIONS:'
 
@@ -80,7 +80,7 @@ if album_tags['resultCount'].to_i.zero?
   abort "autotune: error: no results from iTunes with given arguments"
 end
 
-AutoTune::Obtainer.get_artwork(album_tags, options[:directory])
+AutoTune::Obtainer.get_artwork(album_tags)
 
 paths.each do |path|
   track_number = AutoTune::Obtainer.get_track_number(path)
@@ -91,27 +91,8 @@ paths.each do |path|
   end
 
   tune_tags = AutoTune::Util.parse(album_tags, track_number)
+  tune_tags.push(AutoTune::Obtainer.get_genre_id(album_tags).to_i, AutoTune::Obtainer.get_copyright(album_tags))
 
-  # # Switch to ffmpeg
-  # AutoTune::Util.convert(path, '-f m4af -d aac -b 256000 -q 127 -s 2')
-  # path = File.dirname(path) + "/resources/#{File.basename(path, '.*')}" + '.m4a'
-
-  # Find a clearer way to do this
-  AutoTune::Designator.set_artist_id(tune_tags[0], path)
-  AutoTune::Designator.set_playlist_id(tune_tags[1], path)
-  AutoTune::Designator.set_catalogue_id(tune_tags[2], path)
-  AutoTune::Designator.set_artist(tune_tags[3], path)
-  AutoTune::Designator.set_album(tune_tags[4], path)
-  AutoTune::Designator.set_title(tune_tags[5], path)
-  AutoTune::Designator.set_release_date(tune_tags[7], path)
-  AutoTune::Designator.set_rating(tune_tags[9], path)
-  AutoTune::Designator.set_disk_number(tune_tags[11], tune_tags[10], path)
-  AutoTune::Designator.set_track_number(tune_tags[13], tune_tags[12], path)
-  AutoTune::Designator.set_genre(tune_tags[17], path)
-
-  AutoTune::Designator.set_genre_id(AutoTune::Obtainer.get_genre_id(tune_tags[17]).to_i, path)
-  AutoTune::Designator.set_tempo(AutoTune::Obtainer.get_tempo(album_tags, track_number), path)
-  AutoTune::Designator.set_copyright(AutoTune::Obtainer.get_copyright(album_tags), path)
-  AutoTune::Designator.set_artwork(options[:directory] + '/artwork.jpg', path)
+  AutoTune::Designator.set_all(tune_tags, path)
 
 end

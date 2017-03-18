@@ -1,24 +1,20 @@
 require 'json'
 require 'net/http'
 require 'taglib'
-require 'rspotify'
+require 'tmpdir'
 
 module AutoTune
   class Obtainer
-
-    CLIENT_ID = 'e38aca60500943758be6be6e624b2e35'
-    CLIENT_SECRET = '68c60cc5600c48e0ab6f28f5a5e24040'
-
     def self.get_tags(album, artist, clean, deluxe)
       album_id = get_album_id(album, artist, clean, deluxe)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}&entity=song"
       return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
     end
 
-    def self.get_artwork(album_tags, directory)
+    def self.get_artwork(album_tags)
       artwork_url = AutoTune::Util.parse(album_tags, 0)[6]
       artwork_url = artwork_url.gsub!(/100x100bb.jpg/, '1000000000x1000000000bb.jpg')
-      File.write(directory + '/artwork.jpg', Net::HTTP.get(URI.parse(URI.encode(artwork_url.to_s))))
+      File.write('/var/tmp/artwork.jpg', Net::HTTP.get(URI.parse(URI.encode(artwork_url.to_s))))
     end
 
     def self.get_track_number(song)
@@ -27,21 +23,8 @@ module AutoTune
       end
     end
 
-    def self.get_tempo(album_tags, track_number)
-      artist = AutoTune::Util.parse(album_tags, 0)[3]
-      title = AutoTune::Util.parse(album_tags, track_number)[5]
-      if title.include? '('
-        title = title.slice(0..title.index('(') - 1)
-      end
-      title.gsub!(/[^0-9A-Za-z]/, '')
-      RSpotify.authenticate(CLIENT_ID, CLIENT_SECRET)
-      unless RSpotify::Track.search(artist.downcase + ' ' + title.downcase).all? &:nil?
-        RSpotify::Track.search(artist.downcase + ' ' + title.downcase).max_by { |element|
-          element.audio_features.tempo.round }.audio_features.tempo.round
-      end
-    end
-
-    def self.get_genre_id(genre_name)
+    def self.get_genre_id(album_tags)
+      genre_name = AutoTune::Util.parse(album_tags, 0)[17]
       genre_appendix_lookup =
           'http://itunes.apple.com/WebObjects/MZStoreServices.woa/ws/genres'
       unless genre_name.nil?

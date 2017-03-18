@@ -275,5 +275,22 @@ module AutoTune
         end
       end
     end
+
+    def self.set_all(tune_tags, song)
+      set_artist_id(tune_tags.at(0), song)
+      set_playlist_id(tune_tags.at(1), song)
+      set_catalogue_id(tune_tags.at(2), song)
+      set_artist(tune_tags.at(3), song)
+      set_album(tune_tags.at(4), song)
+      set_title(tune_tags.at(5), song)
+      set_release_date(tune_tags.at(7), song)
+      set_rating(tune_tags.at(9), song)
+      set_disk_number(tune_tags.at(11), tune_tags.at(10), song)
+      set_track_number(tune_tags.at(13), tune_tags.at(12), song)
+      set_genre(tune_tags.at(17), song)
+      set_genre_id(tune_tags.at(19), song)
+      set_copyright(tune_tags.at(20), song)
+      set_artwork('/var/tmp/artwork.jpg', song)
+    end
   end
 end
