@@ -79,10 +79,13 @@ module AutoTune
 
     def self.set_release_date(release_date, song)
       if File.exists? song
-        TagLib::FileRef.open(song) do |tune|
-          unless tune.null?
-            tune.tag.year = release_date.to_i unless release_date.nil?
-            tune.save
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless release_date.nil?
+              item = TagLib::MP4::Item.from_string_list([release_date])
+              tune.tag.item_list_map.insert('©day', item)
+              tune.save
+            end
           end
         end
       end
@@ -276,6 +279,20 @@ module AutoTune
       end
     end
 
+    def self.set_composer(composer, song)
+      if File.exists? song
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless composer.nil?
+              item = TagLib::MP4::Item.from_string_list([composer])
+              tune.tag.item_list_map.insert('©wrt', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
     def self.set_all(tune_tags, song)
       set_artist_id(tune_tags.at(0), song)
       set_playlist_id(tune_tags.at(1), song)
@@ -288,8 +305,10 @@ module AutoTune
       set_disk_number(tune_tags.at(11), tune_tags.at(10), song)
       set_track_number(tune_tags.at(13), tune_tags.at(12), song)
       set_genre(tune_tags.at(17), song)
-      set_genre_id(tune_tags.at(19), song)
-      set_copyright(tune_tags.at(20), song)
+      set_album_artist_name(tune_tags.at(19), song)
+      set_genre_id(tune_tags.at(20), song)
+      set_copyright(tune_tags.at(21), song)
+      set_composer('', song)
       set_artwork('/var/tmp/artwork.jpg', song)
     end
   end

@@ -76,11 +76,17 @@ end
 paths = AutoTune::Util.paths(options[:directory])
 album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:clean], options[:deluxe])
 
+album_details = AutoTune::Obtainer.get_album_details(options[:album], options[:artist], options[:clean], options[:deluxe])
+
 if album_tags['resultCount'].to_i.zero?
   abort "autotune: error: no results from iTunes with given arguments"
 end
 
 AutoTune::Obtainer.get_artwork(album_tags)
+
+album_artist = AutoTune::Obtainer.get_album_artist(album_details)
+genre_id = AutoTune::Obtainer.get_genre_id(album_details)
+copyright = AutoTune::Obtainer.get_copyright(album_details)
 
 paths.each do |path|
   track_number = AutoTune::Obtainer.get_track_number(path)
@@ -90,9 +96,10 @@ paths.each do |path|
     track_number = STDIN.gets.chomp.to_i
   end
 
-  tune_tags = AutoTune::Util.parse(album_tags, track_number)
-  tune_tags.push(AutoTune::Obtainer.get_genre_id(album_tags).to_i, AutoTune::Obtainer.get_copyright(album_tags))
+  tune_tags = AutoTune::Util.parse(album_tags, track_number).push(album_artist, genre_id, copyright)
 
   AutoTune::Designator.set_all(tune_tags, path)
 
 end
+
+system('rm /var/tmp/artwork.jpg')
