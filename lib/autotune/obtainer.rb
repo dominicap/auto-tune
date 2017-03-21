@@ -1,7 +1,6 @@
 require 'json'
 require 'net/http'
 require 'taglib'
-require 'tmpdir'
 
 module AutoTune
   class Obtainer
@@ -55,6 +54,7 @@ module AutoTune
       return album_details.dig('results', 0, 'artistName').to_s
     end
 
+    # TODO: Refactor this and etc. Also, add exclusive to deluxe option
     def self.get_album_id(album, artist, clean, deluxe)
       lookup = 'https://itunes.apple.com/search?term='
       query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'
@@ -62,7 +62,8 @@ module AutoTune
       unless result_hash['resultCount'].to_i.zero?
         (0..result_hash['resultCount'].to_i).each do |key|
           itunes_rating = result_hash.dig('results', key, 'contentAdvisoryRating')
-          if itunes_rating == 'Clean' && clean
+          itunes_rating = result_hash.dig('results', key, 'collectionExplicitness') if itunes_rating.nil?
+          if (itunes_rating == 'Clean' || itunes_rating == 'notExplicit') && clean
             if (result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && deluxe
               return result_hash.dig('results', key, 'collectionId')
             elsif !(result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && !deluxe
