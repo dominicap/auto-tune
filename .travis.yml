@@ -24,3 +24,10 @@ deploy:
   on:
     tags: true
     repo: dominicap/auto-tune
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/7851caa7d6bd35e74470
+    on_success: change
+    on_failure: always
+    on_start: never

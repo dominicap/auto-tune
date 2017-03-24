@@ -18,7 +18,7 @@ Installing AutoTune should be straight-forward if all prerequisites are met. Ple
 
         `apt-get install libtag1-dev`
 
-* [Ruby](https://www.ruby-lang.org/en/downloads/) - The language behind the software.
+* [Ruby](https://www.ruby-lang.org/en/downloads/) - The language behind the software. Must be at least version 2.3.0 or higher.
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 

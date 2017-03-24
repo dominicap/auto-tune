@@ -3,7 +3,7 @@ require 'taglib'
 module AutoTune
   class Designator
     def self.set_artist_id(artist_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless artist_id.nil?
@@ -17,7 +17,7 @@ module AutoTune
     end
 
     def self.set_playlist_id(playlist_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless playlist_id.nil?
@@ -31,7 +31,7 @@ module AutoTune
     end
 
     def self.set_catalogue_id(catalogue_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless catalogue_id.nil?
@@ -45,7 +45,7 @@ module AutoTune
     end
 
     def self.set_artist(artist, song)
-      if File.exists? song
+      if File.exist? song
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.artist = artist unless artist.nil?
@@ -56,7 +56,7 @@ module AutoTune
     end
 
     def self.set_album(album, song)
-      if File.exists? song
+      if File.exist? song
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.album = album unless album.nil?
@@ -67,7 +67,7 @@ module AutoTune
     end
 
     def self.set_title(title, song)
-      if File.exists? song
+      if File.exist? song
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.title = title unless title.nil?
@@ -78,7 +78,7 @@ module AutoTune
     end
 
     def self.set_release_date(release_date, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless release_date.nil?
@@ -92,7 +92,7 @@ module AutoTune
     end
 
     def self.set_rating(rating, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless rating.nil?
@@ -116,7 +116,7 @@ module AutoTune
     end
 
     def self.set_genre(genre, song)
-      if File.exists? song
+      if File.exist? song
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.genre = genre unless genre.nil?
@@ -127,7 +127,7 @@ module AutoTune
     end
 
     def self.track_number(track_number, song)
-      if File.exists? song
+      if File.exist? song
         TagLib::FileRef.open(song) do |tune|
           unless tune.null?
             tune.tag.track = track_number unless track_number.nil?
@@ -138,7 +138,7 @@ module AutoTune
     end
 
     def self.set_artwork(artwork, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless artwork.nil?
@@ -154,7 +154,7 @@ module AutoTune
     end
 
     def self.set_copyright(copyright, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless copyright.nil?
@@ -168,7 +168,7 @@ module AutoTune
     end
 
     def self.set_album_artist_name(album_artist, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless album_artist.nil?
@@ -182,7 +182,7 @@ module AutoTune
     end
 
     def self.set_catalogue_id(catalogue_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless catalogue_id.nil?
@@ -196,7 +196,7 @@ module AutoTune
     end
 
     def self.set_track_number(track_number, total_tracks, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless track_number.nil? || total_tracks.nil?
@@ -210,7 +210,7 @@ module AutoTune
     end
 
     def self.set_disk_number(disk_number, total_disks, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless disk_number.nil? || total_disks.nil?
@@ -224,7 +224,7 @@ module AutoTune
     end
 
     def self.set_playlist_id(playlist_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless playlist_id.nil?
@@ -238,7 +238,7 @@ module AutoTune
     end
 
     def self.set_composer_id(composer_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless composer_id.nil?
@@ -252,7 +252,7 @@ module AutoTune
     end
 
     def self.set_genre_id(genre_id, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless genre_id.nil?
@@ -266,7 +266,7 @@ module AutoTune
     end
 
     def self.set_tempo(tempo, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless tempo.nil?
@@ -280,7 +280,7 @@ module AutoTune
     end
 
     def self.set_composer(composer, song)
-      if File.exists? song
+      if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
             unless composer.nil?
@@ -293,11 +293,35 @@ module AutoTune
       end
     end
 
+    def self.set_comments(comments, song)
+      if File.exist? song
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless comments.nil?
+              item = TagLib::MP4::Item.from_string_list([comments])
+              tune.tag.item_list_map.insert('©cmt', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
+    def self.set_composer(lyrics, song)
+      if File.exist? song
+        if song =~ /.*\.M4A$/i
+          TagLib::MP4::File.open(song) do |tune|
+            unless lyrics.nil?
+              item = TagLib::MP4::Item.from_string_list([lyrics])
+              tune.tag.item_list_map.insert('©lyr', item)
+              tune.save
+            end
+          end
+        end
+      end
+    end
+
     def self.set_all(tune_tags, song)
-
-      
-
-
       set_artist_id(tune_tags.at(0), song)
       set_playlist_id(tune_tags.at(1), song)
       set_catalogue_id(tune_tags.at(2), song)
