@@ -10,6 +10,9 @@ script:
   - gem build autotune.gemspec
   - gem install autotune*.gem
 addons:
+  addons:
+    code_climate:
+      repo_token: 75d49b477143d505aae3f9bb12ca6e4b6b167e182b61ff4249ee4f607ab1fb8d
   apt:
     packages:
     - libtag1-dev
