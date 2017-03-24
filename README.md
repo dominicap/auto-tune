@@ -15,6 +15,33 @@ AutoTune is a simple program that automatically tags music based on information 
 
 ## Prerequisites
 
+Installing AutoTune should be straight-forward if all requirements are met. Before you start, make sure your system has the following:
+
+* GNU/Linux, Unix, or macOS
+
+* [TagLib](http://taglib.org/releases/taglib-1.11.1.tar.gz) - The metadata tagging software that tags the music.
+
+    - On macOS if [brew](https://brew.sh) is installed, execute:
+
+        $ brew install taglib
+
+    - On debian/ubuntu execute:
+
+        $ apt-get install libtag1-dev
+
+* [Ruby](https://www.ruby-lang.org/en/) - The language behind the software.
+
+    - On macOS if [brew](https://brew.sh) is installed, execute:
+
+        $ brew install ruby
+
+    - On Linux it is recommended that you manually compile and install ruby to ensure the latest version is installed.
+
+* [RubyGems](https://rubygems.org/pages/download) - Package manager needed to install the package.
+* [Bundler](http://bundler.io) - Package manager needed to install the package dependencies.
+
+    - $ gem update && gem install bundler
+
 ## Installation
 
 Add this line to your application's Gemfile:
