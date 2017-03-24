@@ -79,7 +79,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-All input and feedback is welcome. Consider dropping in suggestions and ideas in the [Gitter](https://gitter.im/auto-tune) chat room so we can discuss ideas.
+All input and feedback is welcome. Consider dropping in suggestions in the [Gitter](https://gitter.im/auto-tune) chat room so we can discuss ideas.
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/dominicap/auto-tune.
 
