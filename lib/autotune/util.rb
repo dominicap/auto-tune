@@ -12,7 +12,7 @@ module AutoTune
                                      'country', 'currency', 'primaryGenreName')
 
     def self.paths(directory)
-      Array.new(Find.find(directory).select { |p| /.*\.M4A$/i =~ p || /.*\.MP3$/i =~ p })
+      Array.new(Find.find(directory).select { |p| /.*\.M4A$/i =~ p })
     end
 
     def self.parse(result_hash, track_number)

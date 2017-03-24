@@ -294,6 +294,10 @@ module AutoTune
     end
 
     def self.set_all(tune_tags, song)
+
+      
+
+
       set_artist_id(tune_tags.at(0), song)
       set_playlist_id(tune_tags.at(1), song)
       set_catalogue_id(tune_tags.at(2), song)
