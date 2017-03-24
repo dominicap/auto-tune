@@ -4,7 +4,7 @@ AutoTune is a simple program that automatically tags music based on information 
 
 ## Prerequisites
 
-Installing AutoTune should be straight-forward if all prerequisites are met. Before you start, make sure your system has the following:
+Installing AutoTune should be straight-forward if all prerequisites are met. Please make sure your system has the following:
 
 * GNU/Linux, Unix, or macOS
 
