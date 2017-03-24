@@ -53,15 +53,15 @@ Usage after installation is fairly simple. That being said, there are a few nota
 
 With that out of the way usage is as follows:
 
-    $ autotune --album 'album name' --artist 'artist name' --directory 'album directory' [options]
+    $ autotune --album '[album name]' --artist '[artist name]' --directory '[album directory]' [options]
 
 With the options being:
 
-* --deluxe - Enable this option if the album being tagged happens to be the deluxe or exclusive version.
+* `--deluxe` - Enable this option if the album being tagged happens to be the deluxe or exclusive version.
 
-* --clean - Enable this option if the album being tagged happens to be the clean version.
+* `--clean` - Enable this option if the album being tagged happens to be the clean version.
 
-* --single - Enable this option if the album being tagged happens to be a single.
+* `--single` - Enable this option if the album being tagged happens to be a single.
 
 For more information run `autotune` or `autotune --help` to view in detail options and shortcuts provided.
 
