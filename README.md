@@ -1,8 +1,6 @@
-# AutoTune - [![Gem Version](https://badge.fury.io/rb/autotune.svg)](https://badge.fury.io/rb/autotune) [![Build Status](https://travis-ci.org/dominicap/auto-tune.svg?branch=master)](https://travis-ci.org/dominicap/auto-tune) [![Code Climate](https://codeclimate.com/github/dominicap/auto-tune/badges/gpa.svg)](https://codeclimate.com/github/dominicap/auto-tune) [![Test Coverage](https://codeclimate.com/github/dominicap/auto-tune/badges/coverage.svg)](https://codeclimate.com/github/dominicap/auto-tune/coverage) [![security](https://hakiri.io/github/dominicap/auto-tune/master.svg)](https://hakiri.io/github/dominicap/auto-tune/master)
+# AutoTune [![Gem Version](https://badge.fury.io/rb/autotune.svg)](https://badge.fury.io/rb/autotune) [![Build Status](https://travis-ci.org/dominicap/auto-tune.svg?branch=master)](https://travis-ci.org/dominicap/auto-tune) [![Code Climate](https://codeclimate.com/github/dominicap/auto-tune/badges/gpa.svg)](https://codeclimate.com/github/dominicap/auto-tune) [![Test Coverage](https://codeclimate.com/github/dominicap/auto-tune/badges/coverage.svg)](https://codeclimate.com/github/dominicap/auto-tune/coverage) [![security](https://hakiri.io/github/dominicap/auto-tune/master.svg)](https://hakiri.io/github/dominicap/auto-tune/master) [![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/auto-tune)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/autotune`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome to AutoTune
 
 ## Installation
 
