@@ -1,12 +1,23 @@
 language: ruby
 rvm:
-  - 2.4.1
+- 2.4.1
 before_install:
-  - gem update
-  - gem install bundler
+- gem update
+- gem install bundler
 install:
-  - bundle install --retry=3
+- bundle install --retry=3
+script:
+  - gem build autotune.gemspec
+  - gem install autotune*.gem
 addons:
   apt:
     packages:
     - libtag1-dev
+deploy:
+  provider: rubygems
+  api_key:
+    secure: AcjiNMRetzJRtpQcBf0w3Ylr3sF+PaESgZCyzbosPuRKkbrIlSxtwKBWa0yWCdk43joHQaLmlCoSnneiIlB1qxh/OrAj6yUsw8y8RQlTu7xo7v61Y2fKc+REuZSKyAmtSI3heG0R0YFLF3Obfi12ZH/hkMZqXVDddf9dty/uFZW8d5sxDFM3FqOGafalFeMyjOkQFumXauJd+ULshCXuMRiPRmSP96uKp97pPMRDA4DsDUvdlgTw1HQSvrQCgpmn3RQnxcfCI7wxbXe2y1KHjhn/C+WIlqWEuPtKx/9AnbFqyYxOlCo0AXzvtTYkncXk29bam70bwS4g3vCmaE+MAE+FTLuxO7aGwR6tNKPeWxH9pmXPGxzl3lcNj6ZSupElIHG1kHx4ZSw72aPfgmvKV6fBNe2yhhvY6C8AKo8mANkbVHHhy9zQtOrmlMMHIT0QSRK3Go6wUHg/bhZo5+IVUEC3upYe1T7GZRKv3m/7cXoS0FqXXjLpSxHbY4EGZmtoBvlHjAZWy/3yNHSHLkSefKQ50/9x9IfnV+KiMKZXEy1oJr8YwjO6jvkvQ+PdcGUpo2F8lKOCpoxfGArJ1buMn3kobWeajGnelHeGRCR6cvX2jTQ7un11OTsEc6Yg9nbEbnjXLUHj+A2rsPFH9z5wPrFBSHdQjOEvtDpUzbIyXxk=
+  gem: auto-tune
+  on:
+    tags: true
+    repo: dominicap/auto-tune

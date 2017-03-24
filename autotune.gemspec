@@ -5,7 +5,7 @@ require 'autotune/version'
 Gem::Specification.new do |spec|
   spec.name          = "autotune"
   spec.version       = AutoTune::VERSION
-  spec.authors       = ["Dominic Antony Philip"]
+  spec.authors       = ["Dominic Philip"]
   spec.email         = ["domi.a.philip@gmail.com"]
 
   spec.summary       = "A music auto-tagging library using the iTunes API"
@@ -19,6 +19,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.required_ruby_version = '>= 2.3.0'
 
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rake", "~> 12.0"
