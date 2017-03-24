@@ -6,9 +6,6 @@ before_install:
   - gem install bundler
 install:
   - bundle install --retry=3
-script:
-  - gem build autotune.gemspec
-  - gem install autotune*.gem
 addons:
   apt:
     packages:
