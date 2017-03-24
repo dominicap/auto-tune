@@ -24,7 +24,7 @@ Installing AutoTune should be straight-forward if all prerequisites are met. Ple
 
         `$ brew install ruby`
 
-    - On linux, it is recommended that you manually compile and install ruby to ensure the latest version is installed.
+    - On Linux, it is recommended that you manually compile and install Ruby to ensure the latest version is installed.
 
 * [RubyGems](https://rubygems.org/pages/download) - Package manager needed to install the package.
 * [Bundler](http://bundler.io) - Ruby gem needed to install the package dependencies.
@@ -49,7 +49,23 @@ Or install it yourself as:
 
 ## Usage
 
-Usage after installation is fairly simple. That being said, there are a few notable requirements for the music being tagged. Make sure the music being tagged is in the M4A format. If not already in that format, consider using iTunes to convert the music to the iTunes Plus Format. If on linux, use the highly acclaimed [FFmpeg](https://ffmpeg.org) to convert your music to M4A. Further, the music being tagged does not need to be purchased from the iTunes Store however, it needs to be available in the store. A quick google search should ensure whether it is available or not.
+Usage after installation is fairly simple. That being said, there are a few notable requirements for the music being tagged. Make sure the music being tagged is in the M4A format. If not already in that format, consider using iTunes to convert the music to the iTunes Plus Format. If on linux, use the highly acclaimed [FFmpeg](https://ffmpeg.org) to convert your music to M4A. Further, the music being tagged does not need to be purchased from the iTunes Store but it needs to be available in the store. A quick google search should ensure whether it is available or not.
+
+With that out of the way usage is as follows:
+
+    $ autotune --album 'album name' --artist 'artist name' --directory 'album directory path' [options]
+
+With the options being:
+
+    - --deluxe -> Enable this option if the album being tagged happens to be the deluxe or exclusive version.
+
+    - --clean -> Enable this option if the album being tagged happens to be the clean version.
+
+    - --single -> Enable this option if the album being tagged happens to be a single.
+
+For more information run `$ autotune` or `$ autotune --help` to view in detail options and shortcuts provided.
+
+Please note the package is in its early stages and might have issues with some albums. Please consider making a copy of your music before using the package.
 
 ## Development
 
