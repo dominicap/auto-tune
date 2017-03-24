@@ -23,24 +23,24 @@ Installing AutoTune should be straight-forward if all requirements are met. Befo
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
-        $ brew install taglib
+        `$ brew install taglib`
 
     - On debian/ubuntu execute:
 
-        $ apt-get install libtag1-dev
+        `$ apt-get install libtag1-dev`
 
 * [Ruby](https://www.ruby-lang.org/en/) - The language behind the software.
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
-        $ brew install ruby
+        `$ brew install ruby`
 
     - On Linux it is recommended that you manually compile and install ruby to ensure the latest version is installed.
 
 * [RubyGems](https://rubygems.org/pages/download) - Package manager needed to install the package.
 * [Bundler](http://bundler.io) - Package manager needed to install the package dependencies.
 
-    - $ gem update && gem install bundler
+    - `$ gem update && gem install bundler`
 
 ## Installation
 
