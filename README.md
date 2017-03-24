@@ -1,6 +1,19 @@
-# AutoTune &nbsp; - &nbsp; [![Gem Version](https://badge.fury.io/rb/autotune.svg)](https://badge.fury.io/rb/autotune) [![Build Status](https://travis-ci.org/dominicap/auto-tune.svg?branch=master)](https://travis-ci.org/dominicap/auto-tune) [![Code Climate](https://codeclimate.com/github/dominicap/auto-tune/badges/gpa.svg)](https://codeclimate.com/github/dominicap/auto-tune) [![Test Coverage](https://codeclimate.com/github/dominicap/auto-tune/badges/coverage.svg)](https://codeclimate.com/github/dominicap/auto-tune/coverage) [![security](https://hakiri.io/github/dominicap/auto-tune/master.svg)](https://hakiri.io/github/dominicap/auto-tune/master) [![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/auto-tune)
+# AutoTune &nbsp;&nbsp; [![Gem Version](https://badge.fury.io/rb/autotune.svg)](https://badge.fury.io/rb/autotune) [![Build Status](https://travis-ci.org/dominicap/auto-tune.svg?branch=master)](https://travis-ci.org/dominicap/auto-tune) [![Code Climate](https://codeclimate.com/github/dominicap/auto-tune/badges/gpa.svg)](https://codeclimate.com/github/dominicap/auto-tune) [![Test Coverage](https://codeclimate.com/github/dominicap/auto-tune/badges/coverage.svg)](https://codeclimate.com/github/dominicap/auto-tune/coverage) [![security](https://hakiri.io/github/dominicap/auto-tune/master.svg)](https://hakiri.io/github/dominicap/auto-tune/master) [![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/auto-tune)
 
 Welcome to AutoTune
+
+## Table of Contents
+
+* [AutoTune](#autotune)
+  * [Table of Contents](#table-of-contents)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Development](#development)
+  * [Contributing](#contributing)
+  * [License](#license)
+
+## Prerequisites
 
 ## Installation
 
