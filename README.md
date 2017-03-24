@@ -12,24 +12,24 @@ Installing AutoTune should be straight-forward if all prerequisites are met. Ple
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
-        `$ brew install taglib`
+        `brew install taglib`
 
     - On debian/ubuntu execute:
 
-        `$ apt-get install libtag1-dev`
+        `apt-get install libtag1-dev`
 
 * [Ruby](https://www.ruby-lang.org/en/downloads/) - The language behind the software.
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
-        `$ brew install ruby`
+        `brew install ruby`
 
     - On Linux, it is recommended that you manually compile and install Ruby to ensure the latest version is installed.
 
 * [RubyGems](https://rubygems.org/pages/download) - Package manager needed to install the package.
 * [Bundler](http://bundler.io) - Ruby gem needed to install the package dependencies.
 
-    - `$ gem update && gem install bundler`
+    - `gem update && gem install bundler`
 
 ## Installation
 
@@ -53,17 +53,17 @@ Usage after installation is fairly simple. That being said, there are a few nota
 
 With that out of the way usage is as follows:
 
-    $ autotune --album 'album name' --artist 'artist name' --directory 'album directory path' [options]
+    $ autotune --album 'album name' --artist 'artist name' --directory 'album directory' [options]
 
 With the options being:
 
-    - --deluxe -> Enable this option if the album being tagged happens to be the deluxe or exclusive version.
+* --deluxe - Enable this option if the album being tagged happens to be the deluxe or exclusive version.
 
-    - --clean -> Enable this option if the album being tagged happens to be the clean version.
+* --clean - Enable this option if the album being tagged happens to be the clean version.
 
-    - --single -> Enable this option if the album being tagged happens to be a single.
+* --single - Enable this option if the album being tagged happens to be a single.
 
-For more information run `$ autotune` or `$ autotune --help` to view in detail options and shortcuts provided.
+For more information run `autotune` or `autotune --help` to view in detail options and shortcuts provided.
 
 Please note the package is in its early stages and might have issues with some albums. Please consider making a copy of your music before using the package.
 
