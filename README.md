@@ -2,24 +2,13 @@
 
 AutoTune is a simple program that automatically tags music based on information from the iTunes Affiliates API so that you can enjoy the benefits of a well-organized and more importantly, a well tagged music library. AutoTune can tag a variety of music regardless where it was purchased from (Google Play Store, Ripped CDs etc.). AutoTune adds essential music information (Artwork, Artist Name, Album Name etc.), as well as obscure info such as Track ID, Artist ID, and Genre ID, directly from iTunes thus providing a plethora of benefits such as artist profile pictures in iTunes and [Apple Music lyrics](https://support.apple.com/en-us/HT204459), if a subscription is present.
 
-## Table of Contents
-
-* [AutoTune](#autotune)
-  * [Table of Contents](#table-of-contents)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-  * [Usage](#usage)
-  * [Development](#development)
-  * [Contributing](#contributing)
-  * [License](#license)
-
 ## Prerequisites
 
-Installing AutoTune should be straight-forward if all requirements are met. Before you start, make sure your system has the following:
+Installing AutoTune should be straight-forward if all prerequisites are met. Before you start, make sure your system has the following:
 
 * GNU/Linux, Unix, or macOS
 
-* [TagLib](http://taglib.org/releases/taglib-1.11.1.tar.gz) - The metadata tagging software that tags the music.
+* [TagLib](http://taglib.org) - The metadata tagging software that tags the music.
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
@@ -29,16 +18,16 @@ Installing AutoTune should be straight-forward if all requirements are met. Befo
 
         `$ apt-get install libtag1-dev`
 
-* [Ruby](https://www.ruby-lang.org/en/) - The language behind the software.
+* [Ruby](https://www.ruby-lang.org/en/downloads/) - The language behind the software.
 
     - On macOS if [brew](https://brew.sh) is installed, execute:
 
         `$ brew install ruby`
 
-    - On Linux it is recommended that you manually compile and install ruby to ensure the latest version is installed.
+    - On linux, it is recommended that you manually compile and install ruby to ensure the latest version is installed.
 
 * [RubyGems](https://rubygems.org/pages/download) - Package manager needed to install the package.
-* [Bundler](http://bundler.io) - Package manager needed to install the package dependencies.
+* [Bundler](http://bundler.io) - Ruby gem needed to install the package dependencies.
 
     - `$ gem update && gem install bundler`
 
@@ -60,7 +49,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
 
 ## Development
 
