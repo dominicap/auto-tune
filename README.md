@@ -49,7 +49,7 @@ Or install it yourself as:
 
 ## Usage
 
-
+Usage after installation is fairly simple. That being said, there are a few notable requirements for the music being tagged. Make sure the music being tagged is in the M4A format. If not already in that format, consider using iTunes to convert the music to the iTunes Plus Format. If on linux, use the highly acclaimed [FFmpeg](https://ffmpeg.org) to convert your music to M4A. Further, the music being tagged does not need to be purchased from the iTunes Store however, it needs to be available in the store. A quick google search should ensure whether it is available or not.
 
 ## Development
 
