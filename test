@@ -1,0 +1,43 @@
+0 set_artist_id 0
+
+1 set_playlist_id 1
+
+2 set_catalogue_id 2
+
+3 set_artist 3
+
+4 set_album 4
+
+5 set_title 5
+
+6 set_lyrics -
+
+7 set_release_date 7
+
+8 set_artwork -
+
+9 set_tempo -
+
+10 set_rating 10
+
+11 set_disk_number 11, 10
+
+12 set_composer
+
+13 set_track_number 13, 12
+
+
+
+15 set_comments
+
+16 set_composer_id
+
+17 set_genre 17
+
+
+
+19 set_album_artist_name 19
+
+20 set_genre_id 20
+
+21 set_copyright 21

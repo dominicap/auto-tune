@@ -49,13 +49,13 @@ Or install it yourself as:
 
 ## Usage
 
-Usage after installation is fairly simple. That being said, there are a few notable requirements for the music being tagged. Make sure the music being tagged is in the M4A format. If not already in that format, consider using iTunes to convert the music to the iTunes Plus Format. If on Linux, use the highly acclaimed [FFmpeg](https://ffmpeg.org) to convert your music to M4A. Further, the music being tagged do not need to be purchased from the iTunes Store but it needs to be available in the store. A quick google search should ensure whether it is available or not.
+Usage after installation is fairly simple. That being said, there are a few notable requirements for the music being tagged. Make sure the music being tagged is in the M4A format. If not already in that format, consider using iTunes to convert the music to the iTunes Plus Format. If on Linux, use the highly acclaimed [FFmpeg](https://ffmpeg.org) to convert your music to M4A. Further, the music being tagged does not need to be purchased from the iTunes Store, but it needs to be available in the store. A quick google search should ensure whether it is available or not.
 
 With that out of the way usage is as follows:
 
-    $ autotune --album '[album name]' --artist '[artist name]' --directory '[album directory]' [options]
+    $ autotune --album '[album name]' --artist '[artist name]' --directory '[album location]' [options]
 
-With the options being:
+The options are the following:
 
 * `--deluxe` - Enable this option if the album being tagged happens to be the deluxe or exclusive version.
 
@@ -71,7 +71,7 @@ If your are planning to use this gem as a package for a different project, docum
 
 ## Development
 
-Please feel free to fork this project and add your own contributions and features to it!
+Please feel free to fork this project and add your own contributions and features to it.
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
