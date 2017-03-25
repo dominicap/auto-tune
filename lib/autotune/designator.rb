@@ -254,7 +254,7 @@ module AutoTune
       end
     end
 
-    def set_purchase_date(purchase_date, song)
+    def self.set_purchase_date(purchase_date, song)
       if File.exist? song
         if song =~ /.*\.M4A$/i
           TagLib::MP4::File.open(song) do |tune|
@@ -311,22 +311,25 @@ module AutoTune
     end
 
     def self.set_all(tune_tags, song)
-      functions = ['set_lyrics', 'set_artwork', 'set_tempo', 'set_composer', 'set_description', 'set_comments', 'set_composer_id']
-      AutoTune::Designator.methods(false).each_with_index do |function, index|
-        if functions.include? function
-          AutoTune::Designator.send(:"#{function}", nil, song)
-        elsif function == 'set_disk_number' || function == 'set_track_number'
-          AutoTune::Designator.send(:"#{function}", index, index - 1, song)
-        else
-          AutoTune::Designator.send(:"#{function}", tune_tags[index], song) unless index > 21
-        end
-      end
+      set_artist_id(tune_tags.at(0), song)
+      set_playlist_id(tune_tags.at(1), song)
+      set_catalogue_id(tune_tags.at(2), song)
+      set_artist(tune_tags.at(3), song)
+      set_album(tune_tags.at(4), song)
+      set_title(tune_tags.at(5), song)
+      set_release_date(tune_tags.at(7), song)
+      set_rating(tune_tags.at(9), song)
+      set_disk_number(tune_tags.at(11), tune_tags.at(10), song)
+      set_track_number(tune_tags.at(13), tune_tags.at(12), song)
+      set_genre(tune_tags.at(17), song)
+      set_album_artist_name(tune_tags.at(19), song)
+      set_genre_id(tune_tags.at(20), song)
+      set_copyright(tune_tags.at(21), song)
+      set_composer('', song)
+      set_lyrics('', song)
+      set_comments('', song)
+      set_purchase_date('', song)
       set_artwork('/var/tmp/artwork.jpg', song)
     end
   end
 end
-
-
-# AutoTune::Designator.methods(false).each_with_index do |method, index|
-#   puts method, index
-# end
