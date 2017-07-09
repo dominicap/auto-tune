@@ -10,6 +10,27 @@ module AutoTune
       return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
     end
 
+    def self.fingerprint(song)
+      output = JSON.parse(`fpcalc -json '#{song}'`)
+      return [output['duration'].round, output['fingerprint']]
+    end
+
+    def self.identify(duration, fingerprint)
+      base = "http://api.acoustid.org/v2/lookup?client=G3AyjwfDzk"
+      query = "&duration=#{duration}&meta=recordings+releasegroups+compress&fingerprint=#{fingerprint}"
+
+      output = JSON.parse(Net::HTTP.get(URI.parse(base + query)))
+
+      begin
+        if output['results'][0]['score'] > 0.70
+          main_results = output['results'][0]['recordings'][0]
+          return [main_results['artists'][0]['name'], main_results['releasegroups'][0]['title'], main_results['title']]
+        end
+      rescue
+        # Ask User To Manually Enter Info
+      end
+    end
+
     def self.get_album_details(album, artist, clean, deluxe)
       album_id = get_album_id(album, artist, clean, deluxe)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}"
