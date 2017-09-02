@@ -3,33 +3,14 @@
 require 'optparse'
 require 'autotune'
 
-options = { album: nil, artist: nil, directory: nil, deluxe: false, clean: false, single: false }
-ARGV << '--help' if ARGV.empty?
+options = { directory: nil, deluxe: false, clean: false }
 
 overview_msg = 'OVERVIEW: A music auto-tagging library using the iTunes API'
-usage_msg    = 'USAGE: autotune [options] <inputs>'
+usage_msg    = 'USAGE: autotune [options] <directory>'
 options_msg  = 'OPTIONS:'
 
 option_parser = OptionParser.new do |opts|
   opts.banner = overview_msg + "\n\n" + usage_msg + "\n\n" + options_msg + "\n"
-
-  album_help_msg = 'Pass in album name as argument'
-  opts.on('-a', '--album <album>', album_help_msg) do |album|
-    options[:album] = album.to_s
-  end
-
-  artist_help_msg = 'Pass in artist name as argument'
-  opts.on('-s', '--artist <artist>', artist_help_msg) do |artist|
-    options[:artist] = artist.to_s
-  end
-
-  directory_help_msg = 'Pass in the directory path as argument'
-  opts.on('-d', '--directory <directory>', directory_help_msg) do |directory|
-    unless File.exist?(File.expand_path(directory.to_s))
-      abort 'autotune: error: directory path given does not exist'
-    end
-    options[:directory] = File.expand_path(directory.to_s)
-  end
 
   clean_help_msg = 'Use clean version of album, if applicable'
   opts.on('-c', '--clean', clean_help_msg) do |clean|
@@ -39,11 +20,6 @@ option_parser = OptionParser.new do |opts|
   deluxe_help_msg = 'Use deluxe version of album, if applicable'
   opts.on('-x', '--deluxe', deluxe_help_msg) do |deluxe|
     options[:deluxe] = true unless deluxe.nil?
-  end
-
-  single_help_msg = 'Use single version of album, if applicable'
-  opts.on('-l', '--single', single_help_msg) do |single|
-    options[:single] = true unless single.nil?
   end
 
   opts.on('-h', '--help', 'Displays available options') do
@@ -65,6 +41,14 @@ rescue OptionParser::MissingArgument
   abort 'autotune: error: too few arguments'
 end
 
+directory = ARGV.pop
+abort "autotune: error: need to specify a directory to process" unless directory
+unless File.exist?(File.expand_path(directory.to_s))
+  abort 'autotune: error: directory path given does not exist'
+end
+options[:directory] = File.expand_path(directory.to_s)
+
+
 options.each do |_option, argument|
   abort 'autotune: error: too few arguments' if argument.nil?
 end
@@ -73,34 +57,34 @@ unless AutoTune::Util.os == 'macos'
   abort 'autotune: error: operating system not compatible'
 end
 
-paths = AutoTune::Util.paths(options[:directory])
-album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:clean], options[:deluxe])
-
-album_details = AutoTune::Obtainer.get_album_details(options[:album], options[:artist], options[:clean], options[:deluxe])
-
-if album_tags['resultCount'].to_i.zero?
-  abort 'autotune: error: no results from iTunes with given arguments'
-end
-
-AutoTune::Obtainer.get_artwork(album_tags)
-
-album_artist = AutoTune::Obtainer.get_album_artist(album_details)
-genre_id = AutoTune::Obtainer.get_genre_id(album_details)
-copyright = AutoTune::Obtainer.get_copyright(album_details)
-
-paths.each do |path|
-  track_number = AutoTune::Obtainer.get_track_number(path)
-
-  until track_number > 0
-    print "Please enter the track number for #{File.basename(path)}: "
-    track_number = STDIN.gets.chomp.to_i
-  end
-
-  tune_tags = AutoTune::Util.parse(album_tags, track_number).push(album_artist, genre_id, copyright)
-
-  AutoTune::Designator.set_all(tune_tags, path)
-
-  system('mp4tags -p ' + tune_tags.at(1).to_s + ' ' + '*.m4a')
-end
-
-system('rm /var/tmp/artwork.jpg')
+# paths = AutoTune::Util.paths(options[:directory])
+# album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:clean], options[:deluxe])
+#
+# album_details = AutoTune::Obtainer.get_album_details(options[:album], options[:artist], options[:clean], options[:deluxe])
+#
+# if album_tags['resultCount'].to_i.zero?
+#   abort 'autotune: error: no results from iTunes with given arguments'
+# end
+#
+# AutoTune::Obtainer.get_artwork(album_tags)
+#
+# album_artist = AutoTune::Obtainer.get_album_artist(album_details)
+# genre_id = AutoTune::Obtainer.get_genre_id(album_details)
+# copyright = AutoTune::Obtainer.get_copyright(album_details)
+#
+# paths.each do |path|
+#   track_number = AutoTune::Obtainer.get_track_number(path)
+#
+#   until track_number > 0
+#     print "Please enter the track number for #{File.basename(path)}: "
+#     track_number = STDIN.gets.chomp.to_i
+#   end
+#
+#   tune_tags = AutoTune::Util.parse(album_tags, track_number).push(album_artist, genre_id, copyright)
+#
+#   AutoTune::Designator.set_all(tune_tags, path)
+#
+#   system('mp4tags -p ' + tune_tags.at(1).to_s + ' ' + '*.m4a')
+# end
+#
+# system('rm /var/tmp/artwork.jpg')
