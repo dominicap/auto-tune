@@ -12,26 +12,27 @@ module AutoTune
 
     def self.fingerprint(song)
       output = JSON.parse(`fpcalc -json '#{song}'`)
-      return [output['duration'].round, output['fingerprint']]
+      return [output['duration'].round, output['fingerprint'], song]
     end
 
-    def self.identify(duration, fingerprint)
-      base = "http://api.acoustid.org/v2/lookup?client=G3AyjwfDzk"
-      query = "&duration=#{duration}&meta=recordings+releasegroups+compress&fingerprint=#{fingerprint}"
+    def self.identify(fingerprint)
+      key = JSON.parse(File.read('config/keys.json'))['ACOUSTID']
+      base = "http://api.acoustid.org/v2/lookup?client=#{key}"
+      query = "&duration=#{fingerprint[0]}&meta=recordings+releasegroups+compress&fingerprint=#{fingerprint[1]}"
 
       output = JSON.parse(Net::HTTP.get(URI.parse(base + query)))
 
       begin
-        if output['results'][0]['score'] > 0.70
-          main_results = output['results'][0]['recordings'][0]
-          return [main_results['artists'][0]['name'], main_results['releasegroups'][0]['title'], main_results['title']]
+        if output['results'][0]['score'] > 0.80
+          results = output['results'][0]['recordings'][0]
+          return [results['artists'][0]['name'], results['releasegroups'][0]['title'], results['title']]
         end
       rescue
-        # Ask User To Manually Enter Info
+        print "Please enter the details for the song #{song}: "
       end
     end
 
-    def self.get_album_details(album, artist, clean, deluxe)
+    def self.get_album_details(artist, album, clean, deluxe)
       album_id = get_album_id(album, artist, clean, deluxe)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}"
       return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
@@ -75,32 +76,51 @@ module AutoTune
       return album_details.dig('results', 0, 'artistName').to_s
     end
 
-    # TODO: Refactor this and etc. Also, add exclusive to deluxe option
-    def self.get_album_id(album, artist, clean, deluxe)
+    def self.get_song_info(album, artist, song, clean, deluxe)
       lookup = 'https://itunes.apple.com/search?term='
-      query = (artist + ' ' + album).downcase.tr!(' ', '+') + '&entity=album'
+      query = (artist + ' ' + album + ' ' + song).downcase.tr!(' ', '+') + '&entity=song'
       result_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
+      song_info = Hash.new
+      get_positions(result_hash, deluxe).each do |key|
+        if song_info.nil? || song_info.empty?
+          song_info = find_song(result_hash, key, clean)
+        end
+      end
+      return song_info
+    end
+
+    def self.get_positions(result_hash, deluxe)
       unless result_hash['resultCount'].to_i.zero?
-        (0..result_hash['resultCount'].to_i).each do |key|
-          itunes_rating = result_hash.dig('results', key, 'contentAdvisoryRating')
-          itunes_rating = result_hash.dig('results', key, 'collectionExplicitness') if itunes_rating.nil?
-          if (itunes_rating == 'Clean' || itunes_rating == 'notExplicit') && clean
-            if (result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && deluxe
-              return result_hash.dig('results', key, 'collectionId')
-            elsif !(result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && !deluxe
-              return result_hash.dig('results', key, 'collectionId')
+        song_quantities = Hash.new
+        (0..result_hash['resultCount'].to_i - 1).each do |key|
+          song_quantities[key] = result_hash.dig('results', key, 'trackCount')
+        end
+        (0..song_quantities.length).each do |key|
+          if deluxe
+            unless song_quantities[key] == song_quantities.values.max
+              song_quantities.delete(key)
             end
-          elsif (itunes_rating == 'Explicit' || itunes_rating == 'notExplicit') && !clean
-            if (result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && deluxe
-              return result_hash.dig('results', key, 'collectionId')
-            elsif !(result_hash.dig('results', key, 'collectionName').include? 'Deluxe') && !deluxe
-              return result_hash.dig('results', key, 'collectionId')
+          else
+            unless song_quantities[key] == song_quantities.values.min
+              song_quantities.delete(key)
             end
           end
         end
+        return song_quantities.keys
       end
     end
 
-    private_class_method :get_album_id
+    def self.find_song(result_hash, key, clean)
+      itunes_rating = result_hash.dig('results', key, 'contentAdvisoryRating')
+      itunes_rating = result_hash.dig('results', key, 'collectionExplicitness') if itunes_rating.nil?
+      if (itunes_rating == 'Clean' || itunes_rating == 'notExplicit') && clean
+        return result_hash.dig('results', key)
+      elsif (itunes_rating == 'Explicit' || itunes_rating == 'notExplicit') && !clean
+        return result_hash.dig('results', key)
+      end
+    end
+
+    private_class_method :get_positions
+    private_class_method :find_song
   end
 end

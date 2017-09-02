@@ -79,7 +79,7 @@ album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], opti
 album_details = AutoTune::Obtainer.get_album_details(options[:album], options[:artist], options[:clean], options[:deluxe])
 
 if album_tags['resultCount'].to_i.zero?
-  abort "autotune: error: no results from iTunes with given arguments"
+  abort 'autotune: error: no results from iTunes with given arguments'
 end
 
 AutoTune::Obtainer.get_artwork(album_tags)
@@ -100,6 +100,7 @@ paths.each do |path|
 
   AutoTune::Designator.set_all(tune_tags, path)
 
+  system('mp4tags -p ' + tune_tags.at(1).to_s + ' ' + '*.m4a')
 end
 
 system('rm /var/tmp/artwork.jpg')
