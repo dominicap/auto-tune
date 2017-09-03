@@ -42,7 +42,9 @@ rescue OptionParser::MissingArgument
 end
 
 directory = ARGV.pop if ARGV.length == 1
-abort "autotune: error: need to specify one directory to process" unless directory
+unless directory
+  abort 'autotune: error: need to specify one directory to process'
+end
 unless File.exist?(File.expand_path(directory.to_s))
   abort 'autotune: error: directory path given does not exist'
 end
@@ -60,8 +62,13 @@ paths = AutoTune::Util.paths(options[:directory])
 
 paths.each do |path|
   fingerprint = AutoTune::Obtainer.fingerprint(path)
+
   results = AutoTune::Obtainer.identify(fingerprint)
-  info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe]) if results
+  if results
+    info = AutoTune::Obtainer.get_song_info(
+      results[1], results[0], results[2], options[:clean], options[:deluxe]
+    )
+  end
 
   until info
     print "Please enter the name for #{File.basename(path)}: "
@@ -73,7 +80,9 @@ paths.each do |path|
     print "Please enter the artist for #{File.basename(path)}: "
     artist = STDIN.gets.chomp.to_s
 
-    info = AutoTune::Obtainer.get_song_info(album, artist, song, options[:clean], options[:deluxe])
+    info = AutoTune::Obtainer.get_song_info(
+      album, artist, song, options[:clean], options[:deluxe]
+    )
   end
 
   album_details = AutoTune::Obtainer.get_album_details(info['collectionId'])
