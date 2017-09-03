@@ -15,17 +15,12 @@ module AutoTune
       Array.new(Find.find(directory).select { |p| /.*\.M4A$/i =~ p })
     end
 
-    def self.parse(result_hash, track_number)
-      (0..result_hash['resultCount'].to_i).each { |key|
-        itunes_track_number = result_hash.dig('results', key, 'trackNumber')
-        if track_number == itunes_track_number.to_i
-          info = Array.new
-          (0..ITUNES_TAG_KEYS.length).each { |index|
-            info.push(result_hash.dig('results', key, ITUNES_TAG_KEYS[index]))
-          }
-          return info
-        end
+    def self.parse(song_info)
+      relevant_info = Array.new
+      (0..ITUNES_TAG_KEYS.length).each { |index|
+        relevant_info.push(song_info[ITUNES_TAG_KEYS.at(index)])
       }
+      return relevant_info
     end
 
     def self.os

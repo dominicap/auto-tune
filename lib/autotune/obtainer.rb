@@ -11,19 +11,20 @@ module AutoTune
     end
 
     def self.fingerprint(song)
-      output = JSON.parse(`fpcalc -json '#{song}'`)
+      output = JSON.parse(`fpcalc -json "#{song}"`)
       return [output['duration'].round, output['fingerprint'], song]
     end
 
     def self.identify(fingerprint)
-      key = JSON.parse(File.read('config/keys.json'))['ACOUSTID']
+      file = File.join(File.dirname(__FILE__), 'config/keys.json')
+      key = JSON.parse(File.read(file))['ACOUSTID']
       base = "http://api.acoustid.org/v2/lookup?client=#{key}"
       query = "&duration=#{fingerprint[0]}&meta=recordings+releasegroups+compress&fingerprint=#{fingerprint[1]}"
 
       output = JSON.parse(Net::HTTP.get(URI.parse(base + query)))
 
       begin
-        if output['results'][0]['score'] > 0.80
+        if output['results'][0]['score'] > 0.8
           results = output['results'][0]['recordings'][0]
           return [results['artists'][0]['name'], results['releasegroups'][0]['title'], results['title']]
         end
@@ -32,8 +33,7 @@ module AutoTune
       end
     end
 
-    def self.get_album_details(artist, album, clean, deluxe)
-      album_id = get_album_id(album, artist, clean, deluxe)
+    def self.get_album_details(album_id)
       lookup = "https://itunes.apple.com/lookup?id=#{album_id}"
       return JSON.parse(Net::HTTP.get(URI.parse(lookup)))
     end
@@ -81,12 +81,14 @@ module AutoTune
       query = (artist + ' ' + album + ' ' + song).downcase.tr!(' ', '+') + '&entity=song'
       result_hash = JSON.parse(Net::HTTP.get(URI.parse(lookup + query)))
       song_info = Hash.new
-      get_positions(result_hash, deluxe).each do |key|
-        if song_info.nil? || song_info.empty?
-          song_info = find_song(result_hash, key, clean)
+      unless get_positions(result_hash, deluxe).nil?
+        get_positions(result_hash, deluxe).each do |key|
+          if song_info.nil? || song_info.empty?
+            song_info = find_song(result_hash, key, clean)
+          end
         end
+        return song_info
       end
-      return song_info
     end
 
     def self.get_positions(result_hash, deluxe)

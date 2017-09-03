@@ -41,13 +41,12 @@ rescue OptionParser::MissingArgument
   abort 'autotune: error: too few arguments'
 end
 
-directory = ARGV.pop
-abort "autotune: error: need to specify a directory to process" unless directory
+directory = ARGV.pop if ARGV.length == 1
+abort "autotune: error: need to specify one directory to process" unless directory
 unless File.exist?(File.expand_path(directory.to_s))
   abort 'autotune: error: directory path given does not exist'
 end
 options[:directory] = File.expand_path(directory.to_s)
-
 
 options.each do |_option, argument|
   abort 'autotune: error: too few arguments' if argument.nil?
@@ -57,34 +56,38 @@ unless AutoTune::Util.os == 'macos'
   abort 'autotune: error: operating system not compatible'
 end
 
-# paths = AutoTune::Util.paths(options[:directory])
-# album_tags = AutoTune::Obtainer.get_tags(options[:album], options[:artist], options[:clean], options[:deluxe])
-#
-# album_details = AutoTune::Obtainer.get_album_details(options[:album], options[:artist], options[:clean], options[:deluxe])
-#
-# if album_tags['resultCount'].to_i.zero?
-#   abort 'autotune: error: no results from iTunes with given arguments'
-# end
-#
-# AutoTune::Obtainer.get_artwork(album_tags)
-#
-# album_artist = AutoTune::Obtainer.get_album_artist(album_details)
-# genre_id = AutoTune::Obtainer.get_genre_id(album_details)
-# copyright = AutoTune::Obtainer.get_copyright(album_details)
-#
-# paths.each do |path|
-#   track_number = AutoTune::Obtainer.get_track_number(path)
-#
-#   until track_number > 0
-#     print "Please enter the track number for #{File.basename(path)}: "
-#     track_number = STDIN.gets.chomp.to_i
-#   end
-#
-#   tune_tags = AutoTune::Util.parse(album_tags, track_number).push(album_artist, genre_id, copyright)
-#
-#   AutoTune::Designator.set_all(tune_tags, path)
-#
-#   system('mp4tags -p ' + tune_tags.at(1).to_s + ' ' + '*.m4a')
-# end
-#
-# system('rm /var/tmp/artwork.jpg')
+paths = AutoTune::Util.paths(options[:directory])
+
+paths.each do |path|
+  fingerprint = AutoTune::Obtainer.fingerprint(path)
+  results = AutoTune::Obtainer.identify(fingerprint)
+
+  info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe])
+
+  until info
+    print "Please enter the name for #{File.basename(path)}: "
+    results[2] = STDIN.gets.chomp.to_s
+
+    print "Please enter the album for #{File.basename(path)}: "
+    results[1] = STDIN.gets.chomp.to_s
+
+    print "Please enter the artist for #{File.basename(path)}: "
+    results[0] = STDIN.gets.chomp.to_s
+
+    info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe])
+  end
+
+  album_details = AutoTune::Obtainer.get_album_details(info['collectionId'])
+
+  AutoTune::Obtainer.get_artwork(album_details)
+
+  album_artist = AutoTune::Obtainer.get_album_artist(album_details)
+  genre_id = AutoTune::Obtainer.get_genre_id(album_details)
+  copyright = AutoTune::Obtainer.get_copyright(album_details)
+
+  tune_tags = AutoTune::Util.parse(info).push(album_artist, genre_id, copyright)
+
+  AutoTune::Designator.set_all(tune_tags, path)
+end
+
+system('rm /var/tmp/artwork.jpg')
