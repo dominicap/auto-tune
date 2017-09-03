@@ -312,7 +312,7 @@ module AutoTune
 
     def self.set_all(tune_tags, song)
       set_artist_id(tune_tags.at(0), song)
-      set_playlist_id(tune_tags.at(1), song)
+      # set_playlist_id(tune_tags.at(1), song) - Need upstream fix
       set_catalogue_id(tune_tags.at(2), song)
       set_artist(tune_tags.at(3), song)
       set_album(tune_tags.at(4), song)
