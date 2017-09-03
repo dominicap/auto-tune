@@ -61,20 +61,19 @@ paths = AutoTune::Util.paths(options[:directory])
 paths.each do |path|
   fingerprint = AutoTune::Obtainer.fingerprint(path)
   results = AutoTune::Obtainer.identify(fingerprint)
-
-  info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe])
+  info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe]) if results
 
   until info
     print "Please enter the name for #{File.basename(path)}: "
-    results[2] = STDIN.gets.chomp.to_s
+    song = STDIN.gets.chomp.to_s
 
     print "Please enter the album for #{File.basename(path)}: "
-    results[1] = STDIN.gets.chomp.to_s
+    album = STDIN.gets.chomp.to_s
 
     print "Please enter the artist for #{File.basename(path)}: "
-    results[0] = STDIN.gets.chomp.to_s
+    artist = STDIN.gets.chomp.to_s
 
-    info = AutoTune::Obtainer.get_song_info(results[1], results[0], results[2], options[:clean], options[:deluxe])
+    info = AutoTune::Obtainer.get_song_info(album, artist, song, options[:clean], options[:deluxe])
   end
 
   album_details = AutoTune::Obtainer.get_album_details(info['collectionId'])
